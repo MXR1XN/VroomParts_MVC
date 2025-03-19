@@ -4,46 +4,76 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - VroomParts</title>
+
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/VroomParts.styles.css" asp-append-version="true" />
+    <script src="https://kit.fontawesome.com/a076d05399.js"></script>
 </head>
 <body>
+    <!-- ✅ Navigation Panel -->
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">VroomParts</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <div class="container">
+                <a class="navbar-brand text-warning fw-bold" asp-area="" asp-controller="Home" asp-action="Index">
+                    <i class="fas fa-car"></i> VroomParts
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav me-auto">
+                        <!-- ✅ Home Page -->
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="nav-link" asp-area="Customer" asp-controller="Home" asp-action="Index">
+                                <i class="fas fa-home"></i> Home
+                            </a>
                         </li>
+                        <!-- ✅ Privacy Policy -->
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                            <a class="nav-link" asp-area="Customer" asp-controller="Home" asp-action="Privacy">
+                                <i class="fas fa-user-shield"></i> Privacy Policy
+                            </a>
+                        </li>
+                        <!-- ✅ Manage Car Parts -->
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="Admin" asp-controller="CarPart" asp-action="Index">
+                                <i class="fas fa-tools"></i> Car Parts
+                            </a>
+                        </li>
+                        <!-- ✅ Manage Categories -->
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="Admin" asp-controller="Category" asp-action="Index">
+                                <i class="fas fa-list"></i> Categories
+                            </a>
                         </li>
                     </ul>
+
+
+                    <partial name = "_LoginPartial"/>
+
                 </div>
             </div>
         </nav>
     </header>
-    <div class="container">
+
+    <!-- ✅ Main Content -->
+    <div class="container mt-4">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
+    <!-- ✅ Footer -->
+    <footer class="bg-dark text-white text-center py-3 mt-5">
         <div class="container">
-            &copy; 2025 - VroomParts - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            <p>&copy; @DateTime.Now.Year - VroomParts. All rights reserved.</p>
         </div>
     </footer>
+
+    <!-- ✅ Scripts -->
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

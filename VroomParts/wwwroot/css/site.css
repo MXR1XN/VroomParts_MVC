@@ -1,22 +1,118 @@
 html {
-  font-size: 14px;
+    font-size: 14px;
 }
 
 @media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
+    html {
+        font-size: 16px;
+    }
 }
 
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
-}
-
-html {
-  position: relative;
-  min-height: 100%;
-}
-
+/* Global Styling */
 body {
-  margin-bottom: 60px;
+    background-color: #1a1e2b; /* Soft Dark Blue */
+    color: #e0e0e0; /* Light Gray Text */
+    font-family: 'Poppins', sans-serif;
 }
+
+/* Navbar */
+.navbar {
+    background-color: #22334d !important; /* Deep Blue */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.navbar-brand, .navbar-nav .nav-link {
+    color: #f8a817 !important; /* Warm Orange */
+    font-weight: 600;
+}
+
+    .navbar-brand:hover, .navbar-nav .nav-link:hover {
+        color: #ffcc5c !important; /* Softer Orange */
+    }
+
+/* Container */
+.container {
+    max-width: 1200px;
+}
+
+/* Table */
+.table {
+    background-color: #252e40; /* Dark Blue-Grey */
+    color: #e0e0e0;
+    border-radius: 8px;
+}
+
+    .table th {
+        background-color: #2f486b; /* Medium Blue */
+        color: #ffcc5c; /* Warm Accent */
+        text-transform: uppercase;
+    }
+
+    .table tbody tr {
+        background-color: #2a354d;
+    }
+
+        .table tbody tr:hover {
+            background-color: #374a6e; /* Softer Blue */
+        }
+
+/* Buttons */
+.btn-custom {
+    background-color: #f8a817; /* Orange Primary */
+    color: #212529;
+    font-weight: 600;
+    border-radius: 6px;
+    transition: 0.3s;
+}
+
+    .btn-custom:hover {
+        background-color: #ffcc5c; /* Lighter Orange */
+        color: black;
+    }
+
+.btn-secondary-custom {
+    background-color: #17a689; /* Teal Green */
+    color: white;
+    font-weight: 600;
+    border-radius: 6px;
+    transition: 0.3s;
+}
+
+    .btn-secondary-custom:hover {
+        background-color: #14d1a3;
+        color: black;
+    }
+
+/* Footer */
+footer {
+    background: #22334d; /* Dark Blue */
+    color: white;
+    padding: 15px 0;
+    text-align: center;
+}
+
+    footer a {
+        color: #f8a817; /* Orange Accent */
+        text-decoration: none;
+    }
+
+        footer a:hover {
+            text-decoration: underline;
+            color: #ffcc5c;
+        }
+.image-container {
+    width: 150px; 
+    height: 150px; 
+    overflow: hidden; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.car-part-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
