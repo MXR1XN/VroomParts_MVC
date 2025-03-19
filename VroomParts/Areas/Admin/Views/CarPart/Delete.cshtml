@@ -1,0 +1,43 @@
+﻿@using VroomParts.Areas.Admin.Application;
+@using VroomParts.Areas.Admin.Application.CarParts
+@model CarPartDTO
+
+@{
+    ViewData["Title"] = "Delete Car Part";
+}
+
+<div class="container text-center">
+    <h2 class="text-danger">Delete Car Part</h2>
+    <p class="lead">Are you sure you want to delete <strong>@Model.Name</strong>?</p>
+
+    <div class="card bg-dark text-light mx-auto" style="max-width: 400px;">
+        <div class="card-body">
+            <h5 class="card-title">@Model.Name</h5>
+            <p><strong>Price:</strong> $@Model.Price</p>
+            <p>@Model.Description</p>
+            <p><strong>Fits:</strong> @Model.VehicleCompatibility</p>
+
+            @if (!string.IsNullOrEmpty(Model.ImageUrl))
+            {
+                <img src="@Url.Content(Model.ImageUrl)" class="img-fluid" alt="@Model.Name" />
+            }
+            else
+            {
+                <p class="text-muted">No Image Available</p>
+            }
+        </div>
+    </div>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success text-center mt-3">
+            @TempData["SuccessMessage"]
+        </div>
+    }
+
+    <form asp-action="DeleteConfirmed" method="post" class="mt-4">
+        <input type="hidden" asp-for="Id" />
+        <button type="submit" class="btn btn-danger">Yes, Delete</button>
+        <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>

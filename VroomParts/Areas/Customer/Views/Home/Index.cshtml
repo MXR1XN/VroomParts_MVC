@@ -1,0 +1,119 @@
+﻿@using VroomParts.Areas.Admin.Application;
+@using VroomParts.Areas.Admin.Application.CarParts
+@model List<CarPartDTO>
+
+@{
+    ViewData["Title"] = "Available Car Parts";
+}
+
+<div class="text-center mb-4">
+    <h1 class="text-primary">Welcome to VroomParts</h1>
+    <p>Find the best car parts for your vehicle!</p>
+</div>
+
+<!-- Filters -->
+<form method="get" asp-action="Index" class="mb-4">
+    <div class="row align-items-center">
+        <!-- ✅ MULTISELECT DROPDOWN Category Filter (White Dropdown) -->
+        <div class="col-md-2">
+            <label class="form-label d-block">Filter by Category:</label>
+            <div class="dropdown">
+                <button class="btn btn-light dropdown-toggle w-100 text-dark" type="button" id="categoryDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                    Select Categories
+                </button>
+                <ul class="dropdown-menu p-3 w-100" style="max-height: 250px; overflow-y: auto; background-color: white;">
+                    <!-- Додано пункт "Не вибрано" -->
+                    <li>
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" id="noCategorySelected">
+                            <label class="form-check-label" for="noCategorySelected">No Category Selected</label>
+                        </div>
+                    </li>
+                    <li><hr class="dropdown-divider"></li>
+                    @foreach (var category in ViewBag.Categories)
+                    {
+                        <li>
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input categoryCheckbox" name="CategoryIds" value="@category.Id"
+                                @(ViewBag.SelectedCategories != null && ((List<Guid>)ViewBag.SelectedCategories).Contains(category.Id) ? "checked" : "")>
+                                <label class="form-check-label">@category.Name</label>
+                            </div>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+
+        <!-- ✅ Price Filters -->
+        <div class="col-md-2">
+            <label class="form-label">Price from</label>
+            <input type="number" class="form-control" name="MinPrice" step="0.01" value="@Context.Request.Query["MinPrice"]">
+        </div>
+        <div class="col-md-2">
+            <label class="form-label">Price to</label>
+            <input type="number" class="form-control" name="MaxPrice" step="0.01" value="@Context.Request.Query["MaxPrice"]">
+        </div>
+
+        <!-- ✅ Search Field -->
+        <div class="col-md-2">
+            <label class="form-label">Search</label>
+            <input type="text" class="form-control" name="SearchPart" value="@Context.Request.Query["SearchPart"]">
+        </div>
+
+        <!-- ✅ Vehicle Compatibility -->
+        <div class="col-md-2">
+            <label class="form-label">Vehicle Compatibility</label>
+            <input type="text" class="form-control" name="PartPartCompatibility" value="@Context.Request.Query["PartPartCompatibility"]">
+        </div>
+
+        <!-- ✅ Filter Button (Now Centered Properly) -->
+        <div class="col-md-2 d-flex align-items-end">
+            <button type="submit" class="btn btn-primary w-100">Apply Filters</button>
+        </div>
+    </div>
+</form>
+
+<!-- ✅ JavaScript for "No Category Selected" -->
+<script>
+    document.getElementById("noCategorySelected").addEventListener("change", function () {
+        let categoryCheckboxes = document.querySelectorAll(".categoryCheckbox");
+        if (this.checked) {
+            categoryCheckboxes.forEach(checkbox => checkbox.checked = false);
+        }
+    });
+
+    document.querySelectorAll(".categoryCheckbox").forEach(checkbox => {
+        checkbox.addEventListener("change", function () {
+            if (this.checked) {
+                document.getElementById("noCategorySelected").checked = false;
+            }
+        });
+    });
+</script>
+
+<!-- Product List -->
+<div class="row">
+    @if (Model != null && Model.Any())
+    {
+        @foreach (var part in Model)
+        {
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                    <img src="@part.ImageUrl" class="card-img-top" alt="@part.Name" onerror="this.src='/images/default-placeholder.png'">
+                    <div class="card-body">
+                        <h5 class="card-title">@part.Name</h5>
+                        <p class="card-text">@part.Description</p>
+                        <p class="text-muted"><strong>Price:</strong> $@part.Price</p>
+                        <p class="text-muted"><strong>Vehicle Compatibility:</strong> @part.VehicleCompatibility</p>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <div class="col-md-12 text-center">
+            <p class="text-muted">No car parts found matching the selected criteria.</p>
+        </div>
+    }
+</div>

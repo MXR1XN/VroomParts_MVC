@@ -1,0 +1,102 @@
+﻿@using VroomParts.Areas.Admin.Application;
+@using VroomParts.Areas.Admin.Application.CarParts
+@model List<CarPartDTO>
+
+<h2 class="text-primary text-center">Available Car Parts</h2>
+
+<form method="get" id="filterForm">
+    <label for="categoryFilter">Filter by Category:</label>
+
+    @foreach (var category in ViewBag.Categories)
+    {
+        <div>
+            <input type="checkbox" class="categoryCheckbox" id="category_@category.Id"
+                   name="CategoryIds" value="@category.Id"
+            @(ViewBag.SelectedCategories != null && ViewBag.SelectedCategories.Contains(category.Id) ? "checked" : "")>
+            <label for="category_@category.Id">@category.Name</label>
+        </div>
+    }
+
+    <button type="submit" class="btn btn-primary mt-2">Apply Filter</button>
+</form>
+
+
+
+<!-- ✅ Add Create Button -->
+<div class="text-end mb-3">
+    <a asp-action="Create" class="btn btn-success">
+        <i class="fas fa-plus"></i> Add New Car Part
+    </a>
+</div>
+
+@if (Model == null || !Model.Any())
+{
+    <div class="alert alert-warning text-center">
+        ⚠ No car parts available in the selected categories.
+    </div>
+}
+else
+{
+    <div class="row">
+        @foreach (var part in Model)
+        {
+            <div class="col-md-4 mb-4">
+                <div class="card bg-dark text-light">
+                    <div class="card-body">
+                        <h5 class="card-title">@part.Name</h5>
+                        <p><strong>Price:</strong> $@part.Price</p>
+                        <p>@part.Description</p>
+                        <p><strong>Fits:</strong> @part.VehicleCompatibility</p>
+
+                        @if (!string.IsNullOrEmpty(part.ImageUrl))
+                        {
+                            <div class="image-container">
+                                <img src="@part.ImageUrl" class="car-part-img" />
+                            </div>
+                        }
+                        else
+                        {
+                            <p class="text-muted">No Image Available</p>
+                        }
+
+
+                        <a class="btn btn-warning" asp-action="Edit" asp-route-id="@part.Id">
+                            <i class="fas fa-edit"></i> Edit
+                        </a>
+
+                        <a class="btn btn-danger" asp-action="Delete" asp-route-id="@part.Id">
+                            <i class="fas fa-trash"></i> Delete
+                        </a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        updateAllCategoriesCheckbox();
+
+        function updateAllCategoriesCheckbox() {
+            var allCheckbox = document.getElementById("allCategories");
+            var categoryCheckboxes = document.querySelectorAll(".category-checkbox");
+
+            var allChecked = Array.from(categoryCheckboxes).every(cb => cb.checked);
+            allCheckbox.checked = allChecked;
+        }
+
+        function toggleAllCategories() {
+            var allCheckbox = document.getElementById("allCategories");
+            var categoryCheckboxes = document.querySelectorAll(".category-checkbox");
+
+            categoryCheckboxes.forEach(cb => {
+                cb.checked = allCheckbox.checked;
+            });
+        }
+
+        document.querySelectorAll(".category-checkbox").forEach(cb => {
+            cb.addEventListener("change", updateAllCategoriesCheckbox);
+        });
+    });
+</script>
