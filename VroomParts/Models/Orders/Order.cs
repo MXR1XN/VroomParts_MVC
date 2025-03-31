@@ -1,14 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Data;
-using System.Diagnostics.Contracts;
-using System.Security.Permissions;
 using VroomParts.Models.User;
 
 namespace VroomParts.Models.Order
 {
-    public class OrderHeader
+	public class Order
     {
         public Guid Id { get; set; }
         public string ApplicaionUserId { get; set; }

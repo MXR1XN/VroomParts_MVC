@@ -10,34 +10,34 @@ namespace VroomParts.Data.Repository.OrderHeaderRepository
         {
             _context = applicationDBContext;
         }
-        public OrderHeader CreateOrderHeader(OrderHeader order)
+        public Order CreateOrderHeader(Order order)
         {
             _context.Add(order);
             _context.SaveChanges();
             return order;
         }
 
-        public OrderHeader DeleteOrderHeader(OrderHeader order)
+        public Order DeleteOrderHeader(Order order)
         {
             _context.Remove(order);
             _context.SaveChanges();
             return order;
         }
-        public OrderHeader UpdateOrderHeader(OrderHeader order)
+        public Order UpdateOrderHeader(Order order)
         {
             _context.Update(order);
             _context.SaveChanges();
             return order;
         }
 
-        public List<OrderHeader> GetAll()
+        public List<Order> GetAll()
         {
-            return _context.OrderHeaders.ToList();
+            return _context.Orders.ToList();
         }
 
-        public OrderHeader? GetById(Guid id)
+        public Order? GetById(Guid id)
         {
-            return _context.OrderHeaders.FirstOrDefault(x => x.Id == id);
+            return _context.Orders.FirstOrDefault(x => x.Id == id);
         }
 
     }
