@@ -1,6 +1,6 @@
-﻿using VroomParts.Models;
+﻿using VroomParts.Models.Product;
 
-namespace VroomParts.Data.Repository.IRepository
+namespace VroomParts.Data.Repository.CarPartRepository
 {
     public interface ICarPartRepository
     {

@@ -1,4 +1,4 @@
-﻿namespace VroomParts.Models
+﻿namespace VroomParts.Models.Product
 {
     public class Category
     {

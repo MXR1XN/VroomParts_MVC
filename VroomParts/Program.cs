@@ -1,11 +1,16 @@
 using VroomParts.Data;
 using Microsoft.EntityFrameworkCore;
-using VroomParts.Data.Repository.IRepository;
 using VroomParts.Areas.Admin.Application.CarParts;
 using VroomParts.Areas.Admin.Application.Categories;
 using VroomParts.Data.Repository.CarPartRepository;
 using VroomParts.Data.Repository.CategoryRepository;
 using Microsoft.AspNetCore.Identity;
+using VroomParts.Utility;
+using Microsoft.AspNetCore.Identity.UI.Services;
+using VroomParts.Data.Repository.ApplicationUserRepository;
+using VroomParts.Data.Repository.ShoppingCartRepository;
+using VroomParts.Areas.Admin.Application.ShoppingCartService;
+using VroomParts.Models.ShoppingCart;
 
 internal class Program
 {
@@ -20,13 +25,33 @@ internal class Program
         builder.Services.AddDbContext<ApplicationDBContext>(options =>
             options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-        builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<ApplicationDBContext>();
+        builder.Services.AddIdentity<IdentityUser, IdentityRole>(options => 
+            options.SignIn.RequireConfirmedAccount = false).
+            AddEntityFrameworkStores<ApplicationDBContext>().
+            AddDefaultTokenProviders();
+
+        builder.Services.ConfigureApplicationCookie(options => {
+            options.LoginPath = $"/Identity/Account/Login";
+            options.LogoutPath = $"/Identity/Account/Logout";
+            options.AccessDeniedPath = $"/Identity/Account/AccessDenied";
+        });
+
         builder.Services.AddRazorPages();
+
         builder.Services.AddTransient<ICarPartService, CarPartService>();
         builder.Services.AddTransient<ICategoryService, CategoryService>();
+        builder.Services.AddTransient<IShoppingCartService, ShoppingCartService>();
 
         builder.Services.AddScoped<ICarPartRepository, CarCartRepository>();
         builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+
+        builder.Services.AddScoped<IApplicationUserRepository, ApplicationUserRepository>();
+
+        builder.Services.AddScoped<IShoppingCartRepository, ShoppingCartRepository>();
+
+        builder.Services.AddScoped<ShoppingCart>();
+
+        builder.Services.AddScoped<IEmailSender, EmailSender>();
 
         var app = builder.Build();
 

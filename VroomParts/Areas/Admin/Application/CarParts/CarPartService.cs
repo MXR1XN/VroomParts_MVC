@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using System.Net;
-using VroomParts.Data.Repository.IRepository;
-using VroomParts.Models;
+using VroomParts.Data.Repository.CarPartRepository;
+using VroomParts.Models.Product;
 
 namespace VroomParts.Areas.Admin.Application.CarParts
 {
@@ -28,6 +28,22 @@ namespace VroomParts.Areas.Admin.Application.CarParts
             var carPart = _carPartRepository.GetById(id);
             return carPart != null ? EntityToDto(carPart) : null;
         }
+
+        /*public ShoppingCart ToShoppingCart(Guid id)
+        {
+            var carPart = _carPartRepository.GetById(id);
+
+            var carPartDTO = EntityToDto(carPart);
+
+            ShoppingCart shoppingCart = new ShoppingCart()
+            {
+                CarPart = carPartDTO,
+                Count = 1,
+                PartId = id
+            };
+
+            return shoppingCart;
+        }*/
 
         public CarPartDTO CreateCarPart(CarPartDTO carPartDto)
         {
@@ -79,7 +95,7 @@ namespace VroomParts.Areas.Admin.Application.CarParts
             return EntityToDto(carPart);
         }
 
-        private static CarPartDTO EntityToDto(CarPart carPart)
+        public static CarPartDTO EntityToDto(CarPart carPart)
         {
             if (carPart == null) throw new ArgumentNullException(nameof(carPart));
 

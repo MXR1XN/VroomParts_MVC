@@ -7,7 +7,7 @@
 }
 
 <div class="text-center mb-4">
-    <h1 class="text-primary">Welcome to VroomParts</h1>
+    <h1 class="text-white">Welcome to VroomParts</h1>
     <p>Find the best car parts for your vehicle!</p>
 </div>
 
@@ -22,7 +22,6 @@
                     Select Categories
                 </button>
                 <ul class="dropdown-menu p-3 w-100" style="max-height: 250px; overflow-y: auto; background-color: white;">
-                    <!-- Додано пункт "Не вибрано" -->
                     <li>
                         <div class="form-check">
                             <input type="checkbox" class="form-check-input" id="noCategorySelected">
@@ -105,6 +104,17 @@
                         <p class="card-text">@part.Description</p>
                         <p class="text-muted"><strong>Price:</strong> $@part.Price</p>
                         <p class="text-muted"><strong>Vehicle Compatibility:</strong> @part.VehicleCompatibility</p>
+
+                        <div class="d-flex gap-2">
+                            <a asp-action="Details" asp-route-id="@part.Id" class="btn btn-primary w-50">View Details</a>
+                            <a asp-action="Details" asp-route-id="@part.Id" class="btn btn-success w-50">Buy Now</a>
+                            @* <form method="post" asp-action="BuyNow" class="w-50">
+                                <input type="hidden" name="id" value="@part.Id" />
+                                <button type="submit" class="btn btn-success w-100">Buy Now</button>
+                            </form> *@
+                        </div>
+
+
                     </div>
                 </div>
             </div>

@@ -1,5 +1,5 @@
 ﻿using VroomParts.Data.Repository.CategoryRepository;
-using VroomParts.Models;
+using VroomParts.Models.Product;
 
 namespace VroomParts.Areas.Admin.Application.Categories
 {

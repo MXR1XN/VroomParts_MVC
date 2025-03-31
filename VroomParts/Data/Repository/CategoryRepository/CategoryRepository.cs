@@ -1,4 +1,4 @@
-﻿using VroomParts.Models;
+﻿using VroomParts.Models.Product;
 
 namespace VroomParts.Data.Repository.CategoryRepository
 {

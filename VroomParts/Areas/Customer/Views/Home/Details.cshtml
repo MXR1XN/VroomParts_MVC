@@ -1,0 +1,70 @@
+﻿@using VroomParts.Models.ShoppingCart
+@model ShoppingCart
+
+@{
+    ViewData["Title"] = Model.CarPart.Name;
+}
+
+<form method="post" asp-action="Details" asp-controller="Home">
+    <input type="hidden" asp-for="PartId" />
+    <input type="hidden" asp-for="ApplicaiotionUserId" />
+
+    <div class="card shadow border-0 mt-4 mb-4">
+        <!-- Header -->
+        <div class="card-header bg-gradient text-light py-4 text-center">
+            <h3 class="text-white text-uppercase">@Model.CarPart.Name</h3>
+        </div>
+
+        <!-- Body -->
+        <div class="card-body">
+            <div class="row align-items-center">
+                <!-- Image Section -->
+                <div class="col-12 col-lg-4 text-center">
+                    <img src="@Model.CarPart.ImageUrl" class="rounded w-100" style="max-height: 300px; object-fit: contain;"
+                         onerror="this.src='/images/default-placeholder.png'" />
+                </div>
+
+                <!-- Details Section -->
+                <div class="col-12 col-lg-8">
+                    <h6 class="text-white text-opacity-50"><strong>Part Number:</strong> @Model.CarPart.Id</h6>
+                    <h6 class="text-white text-opacity-50">
+                        <strong>Base Price:</strong>
+                        <span class="text-decoration-line-through">@Model.CarPart.Price.ToString("c")</span>
+                    </h6>
+
+                    <div class="my-3">
+                        <p class="text-secondary">@Html.Raw(Model.CarPart.Description)</p>
+                    </div>
+
+                    <h6 class="text-white text-opacity-50"><strong>Compatible Vehicles:</strong></h6>
+                    <p class="text-muted">@Model.CarPart.VehicleCompatibility</p>
+
+                    <h6 class="text-white text-opacity-50"><strong>Date Added:</strong></h6>
+                    <p class="text-muted">@Model.CarPart.DateAdded.ToString("MMMM dd, yyyy")</p>
+
+                    <div class="row pl-2 mb-3">
+                        <div class="col-md-4">
+                            <div class="input-group mb-3">
+                                <span class="input-group-text text-white border-0 fw-semibold"
+                                      id="inputGroup-sizing-default">
+                                    Count
+                                </span>
+                                <input asp-for="Count" type="number" value="1" class="form-control text-end"
+                                       aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-12 col-md-6 pb-1">
+                            <button type="submit"
+                                    class="btn btn-primary bg-gradient w-100 py-2 text-uppercase fw-semibold">
+                                Add to Cart
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

@@ -1,5 +1,4 @@
-﻿using VroomParts.Data.Repository.IRepository;
-using VroomParts.Models;
+﻿using VroomParts.Models.Product;
 
 namespace VroomParts.Data.Repository.CarPartRepository
 {
@@ -34,6 +33,10 @@ namespace VroomParts.Data.Repository.CarPartRepository
         public CarPart? GetById(Guid id)
         {
             var carPart = _context.CarParts.FirstOrDefault(j => j.Id == id);
+            if (carPart == null) 
+            {
+                Console.WriteLine("NULLL");
+            }
             return carPart;
         }
 

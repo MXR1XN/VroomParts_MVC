@@ -1,10 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using VroomParts.Areas.Admin.Application;
 using VroomParts.Areas.Admin.Application.Categories;
+using VroomParts.Utility;
 
 namespace VroomParts.Areas.Admin.Controllers
-{
+{ 
     [Area("Admin")]
+    [Authorize(Roles = StaticDetail.Role_Admin)]
     public class CategoryController : Controller
     {
         private readonly ICategoryService _categoryService;
@@ -18,7 +21,6 @@ namespace VroomParts.Areas.Admin.Controllers
             var categories = _categoryService.GetAll();
             return View(categories);
         }
-
         public IActionResult Create()
         {
             return View();

@@ -10,25 +10,27 @@ html {
 
 /* Global Styling */
 body {
-    background-color: #1a1e2b; /* Soft Dark Blue */
-    color: #e0e0e0; /* Light Gray Text */
-    font-family: 'Poppins', sans-serif;
+    background-color: #121212; /* Darker but not fully black */
+    color: #f8f8f8; /* Brighter white text */
 }
-
+h1, h2, h3, h4, h5, h6 {
+    color: #ffffff; /* Pure white */
+}
 /* Navbar */
 .navbar {
-    background-color: #22334d !important; /* Deep Blue */
+    background-color: #000000 !important; /* Deep Blue */
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
 .navbar-brand, .navbar-nav .nav-link {
-    color: #f8a817 !important; /* Warm Orange */
+    color: #ffffff !important; /* Change to White */
     font-weight: 600;
 }
 
     .navbar-brand:hover, .navbar-nav .nav-link:hover {
-        color: #ffcc5c !important; /* Softer Orange */
+        color: #cccccc !important; /* Light Gray on Hover */
     }
+
 
 /* Container */
 .container {
@@ -83,6 +85,68 @@ body {
         color: black;
     }
 
+/* Dark Card Styling */
+.custom-dark-card {
+    background-color: #1e1e2e !important; /* Darker card background */
+    color: #ffffff !important; /* White text */
+    border-radius: 10px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
+    padding: 20px;
+    border: none !important;
+}
+
+    .custom-dark-card .card-header {
+        background: linear-gradient(to bottom, #252e40, #1e1e2e) !important;
+        color: white !important;
+        font-size: 18px;
+        font-weight: bold;
+        padding: 15px;
+        border-bottom: 1px solid #444;
+    }
+
+    .custom-dark-card .card-body {
+        background-color: #1e1e2e !important;
+        padding: 20px;
+    }
+
+    /* Form Styling Inside Card */
+    .custom-dark-card .form-control,
+    .custom-dark-card .form-select {
+        background-color: #282c3a !important; /* Darker input fields */
+        color: #ffffff !important; /* White text */
+        border: 1px solid #444 !important; /* Slight border contrast */
+        padding: 10px;
+        border-radius: 6px;
+    }
+
+        .custom-dark-card .form-control::placeholder {
+            color: #cccccc !important; /* Lighter placeholder text */
+        }
+
+        .custom-dark-card .form-control:focus,
+        .custom-dark-card .form-select:focus {
+            background-color: #323849 !important; /* Slightly lighter focus */
+            border-color: #666 !important;
+            box-shadow: 0px 0px 8px rgba(255, 255, 255, 0.2);
+        }
+
+    /* Form Button */
+    .custom-dark-card .btn-primary {
+        background-color: #f8a817;
+        border: none;
+        padding: 10px 15px;
+        border-radius: 5px;
+        font-size: 16px;
+        transition: background-color 0.3s;
+        width: 100%;
+        text-align: center;
+    }
+
+        .custom-dark-card .btn-primary:hover {
+            background-color: #ffcc5c;
+            color: black;
+        }
+
 /* Footer */
 footer {
     background: #22334d; /* Dark Blue */
@@ -100,10 +164,12 @@ footer {
             text-decoration: underline;
             color: #ffcc5c;
         }
+
+/* Image Container */
 .image-container {
-    width: 150px; 
-    height: 150px; 
-    overflow: hidden; 
+    width: 150px;
+    height: 150px;
+    overflow: hidden;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -116,3 +182,9 @@ footer {
     border-radius: 8px;
 }
 
+/* Responsive Design */
+@media (max-width: 500px) {
+    .custom-dark-card {
+        width: 90%;
+    }
+}

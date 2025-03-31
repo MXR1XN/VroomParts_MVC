@@ -1,4 +1,6 @@
-﻿namespace VroomParts.Areas.Admin.Application.CarParts
+﻿using VroomParts.Models;
+
+namespace VroomParts.Areas.Admin.Application.CarParts
 {
     public interface ICarPartService
     {
@@ -9,7 +11,7 @@
         CarPartDTO DeleteCarPart(Guid id);
         bool CarPartExists(Guid id);
         List<CarPartDTO> GetList(GetPartsRequest request);
-
+/*        ShoppingCart ToShoppingCart(Guid id);*/
         List<CarPartDTO> FilterCarPartsData(GetPartsRequest request);
 
     }
