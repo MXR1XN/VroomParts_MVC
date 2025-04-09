@@ -1,16 +1,25 @@
 using VroomParts.Data;
 using Microsoft.EntityFrameworkCore;
-using VroomParts.Areas.Admin.Application.CarParts;
-using VroomParts.Areas.Admin.Application.Categories;
 using VroomParts.Data.Repository.CarPartRepository;
 using VroomParts.Data.Repository.CategoryRepository;
 using Microsoft.AspNetCore.Identity;
 using VroomParts.Utility;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using VroomParts.Data.Repository.ApplicationUserRepository;
-using VroomParts.Data.Repository.ShoppingCartRepository;
-using VroomParts.Areas.Admin.Application.ShoppingCartService;
-using VroomParts.Models.ShoppingCart;
+using VroomParts.Domain.Users;
+using VroomParts.Domain.Products;
+using VroomParts.Domain.Categories;
+using VroomParts.Domain.Cart;
+using VroomParts.Data.Repository.CartRepository;
+using VroomParts.Application.Products;
+using VroomParts.Application.Categories;
+using VroomParts.Application.Cart;
+using VroomParts.Application.Orders;
+using VroomParts.Data.Repository.OrderRepository;
+using VroomParts.Domain.Orders;
+using VroomParts.Domain.LineItems;
+using VroomParts.Data.Repository.LineItemRepository;
+using VroomParts.Application.AplicationUserService;
 
 internal class Program
 {
@@ -40,16 +49,18 @@ internal class Program
 
         builder.Services.AddTransient<ICarPartService, CarPartService>();
         builder.Services.AddTransient<ICategoryService, CategoryService>();
-        builder.Services.AddTransient<IShoppingCartService, ShoppingCartService>();
+        builder.Services.AddTransient<ICartService, CartService>();
+		builder.Services.AddTransient<IOrderService, OrderService>();
+		builder.Services.AddTransient<IAplicationUserService, AplicationUserService>();
 
-        builder.Services.AddScoped<ICarPartRepository, CarCartRepository>();
+		builder.Services.AddScoped<ICarPartRepository, CarCartRepository>();
         builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+        builder.Services.AddScoped<ICartRepository, CartRepository>();
+        builder.Services.AddScoped<IOrderRepository, OrderRepository>();
+        builder.Services.AddScoped<ILineItemRepository, LineItemRepository>();
 
-        builder.Services.AddScoped<IApplicationUserRepository, ApplicationUserRepository>();
+		builder.Services.AddScoped<IApplicationUserRepository, ApplicationUserRepository>();
 
-        builder.Services.AddScoped<IShoppingCartRepository, ShoppingCartRepository>();
-
-        builder.Services.AddScoped<ShoppingCart>();
 
         builder.Services.AddScoped<IEmailSender, EmailSender>();
 
@@ -59,7 +70,6 @@ internal class Program
         if (!app.Environment.IsDevelopment())
         {
             app.UseExceptionHandler("/Home/Error");
-            // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
             app.UseHsts();
         }
 
@@ -94,7 +104,7 @@ internal class Program
         app.MapControllerRoute(
             name: "default",
             pattern: "{controller=Home}/{action=Index}/{id?}",
-            defaults: new { area = "Customer" } // Force default to Customer area
+            defaults: new { area = "Customer" } 
         );
 
 

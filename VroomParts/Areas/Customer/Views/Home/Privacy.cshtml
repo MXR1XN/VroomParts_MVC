@@ -1,6 +1,61 @@
 ﻿@{
     ViewData["Title"] = "Privacy Policy";
 }
-<h1>@ViewData["Title"]</h1>
+<h1 class="privacy-title">@ViewData["Title"]</h1>
 
-<p>Use this page to detail your site's privacy pastfrasfasfasfasfolicy.</p>
+<style>
+    body {
+        background-color: #111;
+        color: #ccc;
+        font-family: 'Segoe UI', sans-serif;
+    }
+
+    .privacy-container {
+        max-width: 900px;
+        margin: 60px auto;
+        padding: 40px 30px;
+        background-color: #1b1b1b;
+        border-radius: 20px;
+        box-shadow: 0 0 30px rgba(0, 255, 255, 0.15);
+        font-size: 1.1rem;
+        line-height: 1.8;
+    }
+
+    .privacy-title {
+        text-align: center;
+        font-size: 2.5rem;
+        color: #fff;
+        margin-top: 40px;
+    }
+
+    .privacy-container p {
+        margin-bottom: 20px;
+        color: #ddd;
+    }
+
+    @@media (max-width: 768px) {
+        .privacy-container {
+            padding: 25px 15px;
+            font-size: 1rem;
+        }
+
+        .privacy-title {
+            font-size: 2rem;
+        }
+    }
+</style>
+
+<div class="privacy-container">
+    <p>
+        At VroomParts, your privacy is a top priority. This page outlines how we collect, use, and protect your personal data
+        when you interact with our platform. We are committed to ensuring that your experience with us is secure, transparent, and respectful of your rights.
+    </p>
+    <p>
+        We may collect personal details such as your name, contact information, and vehicle data to enhance your shopping experience
+        and recommend the most compatible parts for your car. None of this data will be sold or shared with third parties without your consent.
+    </p>
+    <p>
+        You are entitled to full access and control over your data, and can request updates or deletions at any time.
+        By using our website, you agree to the practices outlined in this policy.
+    </p>
+</div>

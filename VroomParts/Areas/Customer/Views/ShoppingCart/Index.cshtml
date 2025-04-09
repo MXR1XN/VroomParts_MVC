@@ -1,5 +1,5 @@
-﻿@using VroomParts.Models.ShoppingCart
-@model ShoppingCartVM
+﻿@using VroomParts.Areas.Customer.ViewModels
+@model CartProductsViewModel
 
 <form method="post">
     <br />
@@ -15,75 +15,79 @@
                         Continue Shopping
                     </a>
                 </div>
-
             </div>
         </div>
 
         <div class="card-body my-4">
-            <div class="row mb-3 pb-3">
-               
+            @if (Model.Products == null || !Model.Products.Any())
+            {
+                <div class="text-center my-5">
+                    <h4 class="text-muted">Your cart is empty. Please add some products first.</h4>
+                </div>
+            }
+            else
+            {
+                <div class="row mb-3 pb-3">
+                    <div class="col-md-10 offset-md-1">
+                        @foreach (var item in Model.Products)
+                        {
+                            <div class="row align-items-center border-bottom pb-3 mb-3">
+                                <div class="col-md-3 text-center">
+                                    <img src="@item.ImageUrl" class="rounded w-100"
+                                         style="max-height: 200px; object-fit: contain;"
+                                         onerror="this.src='/images/default-placeholder.png'" />
+                                </div>
 
-                <div class="col-md-10 offset-md-1">
-                    @foreach (var item in Model.ShoppingCartList)
-                    {
-                        <div class="row align-items-center border-bottom pb-3 mb-3">
-                            <!-- Image Section (Left) -->
-                            <div class="col-md-3 text-center">
-                                <img src="@item.CarPart.ImageUrl" class="rounded w-100"
-                                     style="max-height: 200px; object-fit: contain;"
-                                     onerror="this.src='/images/default-placeholder.png'" />
-                            </div>
+                                <div class="col-md-6">
+                                    <h5 class="text-uppercase text-secondary"><strong>@item.Name</strong></h5>
+                                    <p class="text-muted"><small>@Html.Raw(item.Description)</small></p>
+                                </div>
 
-                            <!-- Details Section (Right) -->
-                            <div class="col-md-6">
-                                <h5 class="text-uppercase text-secondary"><strong>@item.CarPart.Name</strong></h5>
-                                <p class="text-muted"><small>@Html.Raw(item.CarPart.Description)</small></p>
-                            </div>
+                                <div class="col-md-3 text-center">
+                                    <h6 class="fw-semibold mb-2">
+                                        @item.Price.ToString("c")
+                                        <span class="text-muted">&nbsp;x&nbsp;</span>@item.Quantity
+                                    </h6>
+                                    <div class="btn-group" role="group">
+                                        <a asp-action="Plus" asp-route-carPartId="@item.Id"
+                                           class="btn btn-outline-primary bg-gradient py-2">
+                                            <i class="bi bi-plus-square"></i>
+                                        </a>
 
-                            <!-- Price & Controls -->
-                            <div class="col-md-3 text-center">
-                                <h6 class="fw-semibold mb-2">
-                                    @item.CarPart.Price.ToString("c")
-                                    <span class="text-muted">&nbsp;x&nbsp;</span>@item.Count
-                                </h6>
-                                <div class="btn-group" role="group">
+                                        <a asp-action="Minus" asp-route-carPartId="@item.Id"
+                                           class="btn btn-outline-primary bg-gradient py-2">
+                                            <i class="bi bi-dash-square"></i>
+                                        </a>
 
-                                    <a asp-action="plus" asp-route-cartId="@item.Id" class="btn btn-outline-primary bg-gradient py-2">
-                                        <i class="bi bi-plus-square"></i>
-                                    </a>
-
-                                    <a asp-action="minus" asp-route-cartId="@item.Id" class="btn btn-outline-primary bg-gradient py-2">
-                                        <i class="bi bi-dash-square"></i>
-                                    </a>
-
-                                    <a asp-action="remove" asp-route-cartId="@item.Id" class="btn btn-danger bg-gradient py-2">
-                                        <i class="bi bi-trash-fill"></i>
-                                    </a>
-
+                                        <a asp-action="Remove" asp-route-carPartId="@item.Id"
+                                           class="btn btn-danger bg-gradient py-2">
+                                            <i class="bi bi-trash-fill"></i>
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    }
+                        }
+                    </div>
                 </div>
-            </div>
 
-            <div class="card-footer bg-white border-0">
-                <div class="row">
-                    <div class="col-md-4 offset-md-4">
-                        <ul class="list-group mb-4">
-                            <li class="d-flex justify-content-between align-items-center">
-                                <h5 class="text-dark fw-semibold text-uppercase">Total (USD)</h5>
-                                <h4 class="text-dark fw-bolder">@Model.OrderHeader.OrderTotal.ToString("c")</h4>
-                            </li>
-                        </ul>
+                <div class="card-footer bg-white border-0">
+                    <div class="row">
+                        <div class="col-md-4 offset-md-4">
+                            <ul class="list-group mb-4">
+                                <li class="d-flex justify-content-between align-items-center">
+                                    <h5 class="text-dark fw-semibold text-uppercase">Total (USD)</h5>
+                                    <h4 class="text-dark fw-bolder">@Model.TotalPrice.ToString("c")</h4>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-2 offset-md-5">
+                            <a asp-action="Summary" class="btn btn-primary border-0 bg-gradient w-100 py-2">Summary</a>
+                        </div>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-md-2 offset-md-5">
-                        <a asp-action="Summary" class="btn btn-primary border-0 bg-gradient w-100 py-2">Summary</a>
-                    </div>
-                </div>
-            </div>
+            }
         </div>
     </div>
 </form>

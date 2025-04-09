@@ -1,6 +1,5 @@
-﻿@using VroomParts.Areas.Admin.Application;
-@using VroomParts.Areas.Admin.Application.CarParts
-@model List<CarPartDTO>
+﻿@using VroomParts.Areas.Customer.ViewModels
+@model List<CartProductViewModel>
 
 @{
     ViewData["Title"] = "Available Car Parts";
@@ -106,12 +105,8 @@
                         <p class="text-muted"><strong>Vehicle Compatibility:</strong> @part.VehicleCompatibility</p>
 
                         <div class="d-flex gap-2">
-                            <a asp-action="Details" asp-route-id="@part.Id" class="btn btn-primary w-50">View Details</a>
-                            <a asp-action="Details" asp-route-id="@part.Id" class="btn btn-success w-50">Buy Now</a>
-                            @* <form method="post" asp-action="BuyNow" class="w-50">
-                                <input type="hidden" name="id" value="@part.Id" />
-                                <button type="submit" class="btn btn-success w-100">Buy Now</button>
-                            </form> *@
+                            <a asp-action="Details" asp-route-Id="@part.Id" class="btn btn-primary w-50">View Details</a>
+                            <a asp-action="Details" asp-route-Id="@part.Id" class="btn btn-success w-50">Buy Now</a>
                         </div>
 
 

@@ -1,0 +1,127 @@
+﻿@{
+    ViewData["Title"] = "About VroomParts";
+}
+<h1 class="about-title">@ViewData["Title"]</h1>
+
+<style>
+    body {
+        background-color: #111;
+        color: #ccc;
+        font-family: 'Segoe UI', sans-serif;
+    }
+
+    
+    .about-container {
+        font-size: 1.1rem;
+    }
+
+    .about-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: center;
+        padding: 80px 40px; 
+        gap: 50px;
+        max-width: 1400px;
+        margin: 0 auto;
+    }
+
+    .about-text {
+        flex: 1 1 450px;
+        min-width: 350px;
+        max-width: 650px;
+    }
+
+        .about-text h3 {
+            margin-top: 30px;
+            font-size: 2rem;
+        }
+
+        .about-text p,
+        .about-text ul {
+            font-size: 1.2rem;
+            color: #ddd;
+            line-height: 1.7;
+        }
+
+        .about-text ul {
+            padding-left: 25px;
+        }
+
+    .about-image {
+        flex: 1 1 700px;
+        max-width: 900px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+        .about-image img {
+            width: 100%;
+            border-radius: 20px;
+            box-shadow: 0 0 30px rgba(255, 0, 0, 0.4);
+        }
+
+    .about-title {
+        text-align: center;
+        font-size: 3rem;
+        margin-top: 60px;
+        color: #fff;
+    }
+
+    @@media (max-width: 768px) {
+        .about-container {
+            flex-direction: column;
+            padding: 30px;
+        }
+
+        .about-title {
+            font-size: 2.2rem;
+        }
+
+        .about-text h3 {
+            font-size: 1.6rem;
+        }
+
+        .about-text p,
+        .about-text ul {
+            font-size: 1.05rem;
+        }
+    }
+
+</style>
+
+<div class="about-container">
+    <div class="about-image">
+        <img src="/images/e60m5.jpg" alt="BMW E60 M5 Headlights">
+    </div>
+
+    <div class="about-text">
+        <h3>🔧 Who are we?</h3>
+        <p>
+            VroomParts is a team of car enthusiasts who started with a passion project of modifying our own rides.
+            Now, we provide a wide range of parts, accessories, and tuning solutions tailored to various makes and models.
+        </p>
+
+        <h3>📈 How did it all start?</h3>
+        <p>
+            It all started in a garage with a single BMW E46 and the dream of enhancing it.
+            With more car friends and more requests, VroomParts was born — turning a hobby into a thriving business.
+        </p>
+
+        <h3>🛠 What do we offer?</h3>
+        <ul>
+            <li>LED lights and lighting upgrades</li>
+            <li>Audio systems and multimedia</li>
+            <li>Touchscreens and GPS navigations</li>
+            <li>Tuning: downpipes, chip tuning, spoilers</li>
+            <li>Custom recommendations for every vehicle</li>
+        </ul>
+
+        <h3>🚗 Your car, your statement!</h3>
+        <p>
+            We believe every car has a unique character — and we help bring it to life.
+            Join the VroomParts community and let your car do the talking 😉
+        </p>
+    </div>
+</div>

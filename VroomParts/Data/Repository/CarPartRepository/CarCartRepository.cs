@@ -1,55 +1,20 @@
-﻿using VroomParts.Models.Product;
+﻿using VroomParts.Domain;
+using VroomParts.Domain.Products;
 
 namespace VroomParts.Data.Repository.CarPartRepository
 {
-    public class CarCartRepository : ICarPartRepository
+    public class CarCartRepository : Repository<CarPart>, ICarPartRepository
     {
         private readonly ApplicationDBContext _context;
 
-        public CarCartRepository(ApplicationDBContext applicationDBContext)
+        public CarCartRepository(ApplicationDBContext applicationDBContext) : base(applicationDBContext)
         {
             _context = applicationDBContext;
         }
 
-        public CarPart CreateCarPart(CarPart carPart)
+        public CarPart? Find(Guid id)
         {
-            _context.CarParts.Add(carPart);
-            _context.SaveChanges();
-            return carPart;
-        }
-
-        public CarPart DeleteCarPart(CarPart carPart)
-        {
-            _context.Remove(carPart);
-            _context.SaveChanges();
-            return carPart;
-        }
-
-        public List<CarPart> GetAll()
-        {
-            return _context.CarParts.ToList();
-        }
-
-        public CarPart? GetById(Guid id)
-        {
-            var carPart = _context.CarParts.FirstOrDefault(j => j.Id == id);
-            if (carPart == null) 
-            {
-                Console.WriteLine("NULLL");
-            }
-            return carPart;
-        }
-
-        public IQueryable<CarPart> Query()
-        {
-            return _context.CarParts.AsQueryable();
-        }
-
-        public CarPart UpdateCarPart(CarPart carPart)
-        {
-            _context.Update(carPart);
-            _context.SaveChanges();
-            return carPart;
+            return _context.CarParts.FirstOrDefault(c => c.Id == id);
         }
     }
 }

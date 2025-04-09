@@ -1,6 +1,5 @@
-﻿@using VroomParts.Areas.Admin.Application;
-@using VroomParts.Areas.Admin.Application.CarParts
-@model CarPartDTO
+﻿@using VroomParts.Areas.Admin.ViewModels
+@model CarPartViewModel
 
 @{
     ViewData["Title"] = "Delete Car Part";
@@ -40,4 +39,5 @@
         <button type="submit" class="btn btn-danger">Yes, Delete</button>
         <a asp-action="Index" class="btn btn-secondary">Cancel</a>
     </form>
+
 </div>

@@ -1,33 +1,28 @@
-﻿@using VroomParts.Areas.Admin.Application;
-@using VroomParts.Areas.Admin.Application.CarParts
-@model CarPartDTO
-
-@{
-    ViewData["Title"] = "Edit Car Part";
-}
+﻿@using VroomParts.Areas.Admin.ViewModels
+@model CarPartViewModel
 
 <h2 class="text-warning text-center">Edit Car Part</h2>
 
-<form method="post" asp-action="Edit">
-    <input type="hidden" name="Id" value="@Model.Id" />
+<form method="post" asp-action="Edit" class="p-4 bg-dark text-light rounded">
+    <input type="hidden" asp-for="Id" />
 
     <div class="mb-3">
-        <label class="form-label">Name</label>
-        <input type="text" class="form-control" name="Name" value="@Model.Name" required>
+        <label asp-for="Name" class="form-label"></label>
+        <input asp-for="Name" class="form-control" required />
     </div>
 
     <div class="mb-3">
-        <label class="form-label">Price</label>
-        <input type="number" class="form-control" name="Price" step="0.01" value="@Model.Price" required>
+        <label asp-for="Price" class="form-label"></label>
+        <input asp-for="Price" class="form-control" step="0.01" required />
     </div>
 
     <div class="mb-3">
-        <label class="form-label">Category</label>
-        <select name="CategoryId" class="form-select" required>
+        <label asp-for="CategoryId" class="form-label">Category</label>
+        <select asp-for="CategoryId" class="form-select" required>
             <option value="">-- Select Category --</option>
             @foreach (var category in ViewBag.Categories)
             {
-                <option value="@category.Id" selected="@(Model.CategoryId == category.Id ? "selected" : null)">
+                <option value="@category.Id" selected="@(Model.CategoryId == category.Id)">
                     @category.Name
                 </option>
             }
@@ -35,25 +30,25 @@
     </div>
 
     <div class="mb-3">
-        <label class="form-label">Description</label>
-        <textarea class="form-control" name="Description" rows="3" required>@Model.Description</textarea>
+        <label asp-for="Description" class="form-label"></label>
+        <textarea asp-for="Description" class="form-control" rows="3"></textarea>
     </div>
 
     <div class="mb-3">
-        <label class="form-label">Vehicle Compatibility</label>
-        <input type="text" class="form-control" name="VehicleCompatibility" value="@Model.VehicleCompatibility" required>
+        <label asp-for="VehicleCompatibility" class="form-label"></label>
+        <input asp-for="VehicleCompatibility" class="form-control" />
     </div>
 
     <div class="mb-3">
-        <label class="form-label">Image URL</label>
-        <input type="url" class="form-control" name="ImageUrl" value="@Model.ImageUrl">
+        <label asp-for="ImageUrl" class="form-label"></label>
+        <input asp-for="ImageUrl" class="form-control" />
         @if (!string.IsNullOrEmpty(Model.ImageUrl))
         {
             <div class="mt-2">
-                <img src="@Model.ImageUrl" alt="Product Image" class="img-thumbnail" width="150">
+                <img src="@Model.ImageUrl" alt="Product Image" class="img-thumbnail" width="150" />
             </div>
         }
     </div>
-
+    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
     <button type="submit" class="btn btn-primary">Save Changes</button>
 </form>

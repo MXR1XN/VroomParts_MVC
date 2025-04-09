@@ -1,6 +1,5 @@
-﻿@using VroomParts.Areas.Admin.Application;
-@using VroomParts.Areas.Admin.Application.CarParts
-@model CarPartDTO
+﻿@using VroomParts.Areas.Admin.ViewModels
+@model CreateCarPartModel
 
 @{
     ViewData["Title"] = "Add New Car Part";
@@ -8,20 +7,20 @@
 
 <h2 class="text-warning text-center">Add a New Car Part</h2>
 
-<form method="post" asp-action="Create">
+<form method="post" asp-action="Create" class="p-4 bg-dark text-light rounded">
     <div class="mb-3">
-        <label class="form-label">Name</label>
-        <input type="text" class="form-control" name="Name" required>
+        <label asp-for="Name" class="form-label"></label>
+        <input asp-for="Name" class="form-control" />
     </div>
 
     <div class="mb-3">
-        <label class="form-label">Price</label>
-        <input type="number" class="form-control" name="Price" step="0.01" required>
+        <label asp-for="Price" class="form-label"></label>
+        <input asp-for="Price" class="form-control" step="0.01" />
     </div>
 
     <div class="mb-3">
-        <label class="form-label">Category</label>
-        <select name="CategoryId" class="form-select" required>
+        <label asp-for="CategoryId" class="form-label">Category</label>
+        <select asp-for="CategoryId" class="form-select">
             <option value="">-- Select Category --</option>
             @foreach (var category in ViewBag.Categories)
             {
@@ -31,23 +30,23 @@
     </div>
 
     <div class="mb-3">
-        <label class="form-label">Description</label>
-        <textarea class="form-control" name="Description" rows="3" required></textarea>
+        <label asp-for="Description" class="form-label"></label>
+        <textarea asp-for="Description" class="form-control" rows="3"></textarea>
     </div>
 
     <div class="mb-3">
-        <label class="form-label">Vehicle Compatibility</label>
-        <input type="text" class="form-control" name="VehicleCompatibility" required>
+        <label asp-for="VehicleCompatibility" class="form-label"></label>
+        <input asp-for="VehicleCompatibility" class="form-control" />
     </div>
 
     <div class="mb-3">
-        <label class="form-label">Image URL</label>
-        <input type="url" class="form-control" name="ImageUrl" id="imageUrlInput">
+        <label asp-for="ImageUrl" class="form-label">Image URL</label>
+        <input asp-for="ImageUrl" class="form-control" id="imageUrlInput" />
         <div class="mt-2">
-            <img id="imagePreview" class="img-thumbnail" width="150" style="display:none;">
+            <img id="imagePreview" class="img-thumbnail" width="150" style="display:none;" />
         </div>
     </div>
-
+    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
     <button type="submit" class="btn btn-success">Create</button>
 </form>
 

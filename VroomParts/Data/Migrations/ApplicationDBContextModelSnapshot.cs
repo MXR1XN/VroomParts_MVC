@@ -229,7 +229,80 @@ namespace VroomParts.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("VroomParts.Models.Order.Order", b =>
+            modelBuilder.Entity("VroomParts.Domain.Cart.CartProduct", b =>
+                {
+                    b.Property<Guid>("CarPartId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("ApplicationUserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("Count")
+                        .HasColumnType("int");
+
+                    b.HasKey("CarPartId", "ApplicationUserId");
+
+                    b.HasIndex("ApplicationUserId");
+
+                    b.ToTable("CartProducts");
+                });
+
+            modelBuilder.Entity("VroomParts.Domain.Categories.Category", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Categories");
+                });
+
+            modelBuilder.Entity("VroomParts.Domain.LineItems.LineItem", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Category")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ImageUrl")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("OrderId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.Property<string>("VehicleCompatibility")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OrderId");
+
+                    b.ToTable("LineItems");
+                });
+
+            modelBuilder.Entity("VroomParts.Domain.Orders.Order", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -237,74 +310,31 @@ namespace VroomParts.Migrations
 
                     b.Property<string>("ApplicaionUserId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ApplicationUserId")
-                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("Carrier")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("City")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("OrderDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("OrderStatus")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<double>("OrderTotal")
-                        .HasColumnType("float");
-
-                    b.Property<DateTime>("PaymentDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateOnly>("PaymentDueDate")
-                        .HasColumnType("date");
-
-                    b.Property<string>("PaymentIntentId")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PaymentStatus")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PhoneNumber")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PostalCode")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("ShippingDate")
-                        .HasColumnType("datetime2");
-
                     b.Property<string>("State")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("StreetAddress")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("TrackingNumber")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ApplicationUserId");
+                    b.HasIndex("ApplicaionUserId");
 
                     b.ToTable("Orders");
                 });
 
-            modelBuilder.Entity("VroomParts.Models.Product.CarPart", b =>
+            modelBuilder.Entity("VroomParts.Domain.Products.CarPart", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -341,46 +371,7 @@ namespace VroomParts.Migrations
                     b.ToTable("CarParts");
                 });
 
-            modelBuilder.Entity("VroomParts.Models.Product.Category", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Categories");
-                });
-
-            modelBuilder.Entity("VroomParts.Models.ShoppingCart.ShoppingCart", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("ApplicaiotionUserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("Count")
-                        .HasColumnType("int");
-
-                    b.Property<Guid>("PartId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ApplicaiotionUserId");
-
-                    b.HasIndex("PartId");
-
-                    b.ToTable("ShoppingCarts");
-                });
-
-            modelBuilder.Entity("VroomParts.Models.User.ApplicationUser", b =>
+            modelBuilder.Entity("VroomParts.Domain.Users.ApplicationUser", b =>
                 {
                     b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
 
@@ -453,41 +444,60 @@ namespace VroomParts.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("VroomParts.Models.Order.Order", b =>
+            modelBuilder.Entity("VroomParts.Domain.Cart.CartProduct", b =>
                 {
-                    b.HasOne("VroomParts.Models.User.ApplicationUser", "ApplicationUser")
-                        .WithMany()
+                    b.HasOne("VroomParts.Domain.Users.ApplicationUser", null)
+                        .WithMany("CartProducts")
                         .HasForeignKey("ApplicationUserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("ApplicationUser");
+                    b.HasOne("VroomParts.Domain.Products.CarPart", "CarPart")
+                        .WithMany()
+                        .HasForeignKey("CarPartId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("CarPart");
                 });
 
-            modelBuilder.Entity("VroomParts.Models.Product.CarPart", b =>
+            modelBuilder.Entity("VroomParts.Domain.LineItems.LineItem", b =>
                 {
-                    b.HasOne("VroomParts.Models.Product.Category", "Category")
+                    b.HasOne("VroomParts.Domain.Orders.Order", null)
+                        .WithMany("LineItems")
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("VroomParts.Domain.Orders.Order", b =>
+                {
+                    b.HasOne("VroomParts.Domain.Users.ApplicationUser", null)
+                        .WithMany("Orders")
+                        .HasForeignKey("ApplicaionUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("VroomParts.Domain.Products.CarPart", b =>
+                {
+                    b.HasOne("VroomParts.Domain.Categories.Category", "Category")
                         .WithMany()
                         .HasForeignKey("CategoryId");
 
                     b.Navigation("Category");
                 });
 
-            modelBuilder.Entity("VroomParts.Models.ShoppingCart.ShoppingCart", b =>
+            modelBuilder.Entity("VroomParts.Domain.Orders.Order", b =>
                 {
-                    b.HasOne("VroomParts.Models.User.ApplicationUser", "ApplicationUser")
-                        .WithMany()
-                        .HasForeignKey("ApplicaiotionUserId");
+                    b.Navigation("LineItems");
+                });
 
-                    b.HasOne("VroomParts.Models.Product.CarPart", "CarPart")
-                        .WithMany()
-                        .HasForeignKey("PartId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+            modelBuilder.Entity("VroomParts.Domain.Users.ApplicationUser", b =>
+                {
+                    b.Navigation("CartProducts");
 
-                    b.Navigation("ApplicationUser");
-
-                    b.Navigation("CarPart");
+                    b.Navigation("Orders");
                 });
 #pragma warning restore 612, 618
         }

@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using VroomParts.Areas.Admin.Application.CarParts;
-using VroomParts.Areas.Admin.Application.Categories;
+using VroomParts.Application.Categories;
+using VroomParts.Application.Products;
+using VroomParts.Areas.Admin.ViewModels;
+using VroomParts.Domain.Categories;
+using VroomParts.Domain.Products;
 using VroomParts.Utility;
 
 namespace VroomParts.Areas.Admin.Controllers
@@ -20,62 +22,92 @@ namespace VroomParts.Areas.Admin.Controllers
             _categoryService = categoryService;
         }
 
-        // GET: Displays a list of all car parts in the system.
         public IActionResult Index([FromQuery] GetPartsRequest request)
         {
 
-            var carParts = _carPartService.GetList(request);
+            var carParts = _carPartService.Search(request);
+
             var categories = _categoryService.GetAll();
+
+            if (carParts == null)
+            {
+                return NotFound();
+            }
+
+            var modelCarParts = carParts.Select(c => new CarPartViewModel() 
+            { 
+                Id = c.Id, 
+                Name = c.Name,
+                Price = c.Price,
+                VehicleCompatibility = c.VehicleCompatibility,
+                Description = c.Description,
+                ImageUrl = c.ImageUrl,
+                CategoryId = c.CategoryId
+
+            }).ToList();
 
             ViewBag.Categories = categories;
             ViewBag.SelectedCategories = request.CategoryIds;
 
-            return View(carParts);
+            return View(modelCarParts);
         }
 
-        // GET: Displays the form for creating a new car part.
         public IActionResult Create() 
         {
             ViewBag.Categories = _categoryService.GetAll(); 
             return View();
         }
 
-        // POST: Saves a new car part to the database.
         [HttpPost]
-        public IActionResult Create(CarPartDTO carPartDto)
+        public IActionResult Create(CreateCarPartModel model)
         {
             if (!ModelState.IsValid)
             {
                 ViewBag.Categories = _categoryService.GetAll();
-                return View(carPartDto);
+                return View(model);
             }
-            _carPartService.CreateCarPart(carPartDto);
+            _carPartService.Create(model);
             return RedirectToAction(nameof(Index)); 
         }
 
-        // GET: Displays the form to edit an existing car part.
         public IActionResult Edit(Guid id)
         {
             var carPart = _carPartService.GetById(id);
 
-            ViewBag.Categories = _categoryService.GetAll();
 
-            return View(carPart);
+            if (carPart == null)
+            {
+                return NotFound();
+            }
+
+            var modelCarPart = new CarPartViewModel()
+            {
+                Id = carPart.Id,
+                Name = carPart.Name,
+                Price = carPart.Price,
+                VehicleCompatibility = carPart.VehicleCompatibility,
+                Description = carPart.Description,
+                ImageUrl = carPart.ImageUrl,
+                CategoryId = carPart.CategoryId
+            };
+
+            ViewBag.Categories = _categoryService.GetAll();
+            
+            return View(modelCarPart);
         }
 
         
-        // POST: Updates an existing car part in the database.   
         [HttpPost]
-        public IActionResult Edit(Guid id, CarPartDTO carPartDto)
+        public IActionResult Edit(Guid id, CreateCarPartModel model)
         {
             if (!ModelState.IsValid)
             {
-                return View(carPartDto);
+                return View(model);
             }
 
             try
             {
-                _carPartService.EditCarPart(id, carPartDto);
+                _carPartService.Edit(id, model);
                 return RedirectToAction(nameof(Index));
             }
             catch (ArgumentException)
@@ -84,21 +116,37 @@ namespace VroomParts.Areas.Admin.Controllers
             }
         }
 
-        // GET: Displays the confirmation page before deleting a car part.
         public IActionResult Delete(Guid id)
         {
             var carPart = _carPartService.GetById(id);
-            return carPart != null ? View(carPart) : NotFound();
+
+            if (carPart == null)
+            {
+                return NotFound();
+            }
+
+            var modelCarPart = new CarPartViewModel()
+            {
+                Id = carPart.Id,
+                Name = carPart.Name,
+                Price = carPart.Price,
+                VehicleCompatibility = carPart.VehicleCompatibility,
+                Description = carPart.Description,
+                ImageUrl = carPart.ImageUrl,
+                CategoryId = carPart.CategoryId
+            };
+
+            return View(modelCarPart);
+
         }
 
-        // POST: Permanently deletes a car part from the database.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult DeleteConfirmed(Guid id)
         {
             try
             {
-                _carPartService.DeleteCarPart(id);
+                _carPartService.Delete(id);
                 TempData["SuccessMessage"] = "Car Part deleted successfully.";
                 return RedirectToAction(nameof(Index));
             }
@@ -106,11 +154,6 @@ namespace VroomParts.Areas.Admin.Controllers
             {
                 return NotFound();
             }
-        }
-
-        public bool CarPartExists(Guid id)
-        {
-            return _carPartService.GetById(id) != null;
         }
 
     }

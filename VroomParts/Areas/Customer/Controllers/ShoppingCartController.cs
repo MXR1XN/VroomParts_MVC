@@ -1,21 +1,30 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
-using VroomParts.Areas.Admin.Application.CarParts;
-using VroomParts.Areas.Admin.Application.Categories;
-using VroomParts.Areas.Admin.Application.ShoppingCartService;
-using VroomParts.Data.Repository.ShoppingCartRepository;
-using VroomParts.Models;
+using VroomParts.Application.AplicationUserService;
+using VroomParts.Application.Cart;
+using VroomParts.Application.Orders;
+using VroomParts.Areas.Customer.ViewModels;
 
 namespace VroomParts.Areas.Customer.Controllers
 {
     [Area("Customer")]
-    public class ShoppingCartController : Controller
+	[Authorize]
+	public class ShoppingCartController : Controller
     {
-        private readonly IShoppingCartService _shoppingCartService;
+        private readonly ICartService _shoppingCartService;
+        private readonly IOrderService _orderService;
+        private readonly IAplicationUserService _aplicationUserService;
 
-        public ShoppingCartController(IShoppingCartService shoppingCartService)
+		public ShoppingCartController(
+            ICartService shoppingCartService, 
+            IOrderService orderService,
+			IAplicationUserService aplicationUserService)
         {
             _shoppingCartService = shoppingCartService;
+            _orderService = orderService;
+            _aplicationUserService = aplicationUserService;
+
         }
 
         public IActionResult Index()
@@ -23,46 +32,79 @@ namespace VroomParts.Areas.Customer.Controllers
             var claimsIdentity = (ClaimsIdentity)User.Identity;
             var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-            var shoppingCartVM = _shoppingCartService.GetShoppingCartVM(userId);
+            var shoppingCartDto = _shoppingCartService.GetCart(userId);
 
-            return View(shoppingCartVM);
+            var model = new CartProductsViewModel() 
+            {
+                Header = shoppingCartDto.Header,
+                Products = shoppingCartDto.Products.Select(c => new CartProductViewModel() 
+                { 
+                    Id = c.Id,
+                    Name = c.Name,
+                    Description = c.Description,
+                    ImageUrl = c.ImageUrl,
+                    Price = c.Price,
+                    Quantity = c.Count,
+                    VehicleCompatibility = c.VehicleCompatibility
+                }).ToList(),
+                TotalPrice = shoppingCartDto.TotalPrice,    
+            };
+
+            return View(model);
         }
 
         public IActionResult Summary() 
         {
-            var claimsIdentity = (ClaimsIdentity)User.Identity;
-            var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+			var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var cart = _shoppingCartService.GetCart(userId);
 
-            var shoppingCartVM = _shoppingCartService.GetShoppingCartSummaryVM(userId);
+            var user = _aplicationUserService.GetUser(userId);
 
-            return View(shoppingCartVM);
+			var model = new OrderModel
+			{
+				ApplicaionUserId = userId,
+				TotalPrice = cart.TotalPrice,
+                StreetAddress = user.StreetAddress,
+                PhoneNumber = user.PhoneNumber,
+                PostalCode = user.PostalCode,
+                City = user.City,
+                State = user.State,
+            };
+
+			return View(model);
         }
 
-        /*[HttpPost]
-        [ActionName("Summary")]
-		public IActionResult SummaryPost(ShoppingCartVM shoppingCartVM)
-		{
-			var claimsIdentity = (ClaimsIdentity)User.Identity;
-			var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-
-			shoppingCartVM = _shoppingCartService.GetShoppingCartSummaryVM(userId);
-
-			return View(shoppingCartVM);
-		}*/
-		public IActionResult Plus(Guid cartId) 
+        [HttpPost]
+        public IActionResult Summary(OrderModel model)
         {
-            _shoppingCartService.Plus(cartId);
-           return RedirectToAction(nameof(Index));
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            _orderService.Add(userId, model);
+            return RedirectToAction("Confirmation");
         }
-        public IActionResult Minus(Guid cartId)
+
+        public IActionResult Plus(Guid carPartId)
         {
-            _shoppingCartService.Minus(cartId);
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            _shoppingCartService.Plus(userId, carPartId);
             return RedirectToAction(nameof(Index));
         }
-        public IActionResult Remove(Guid cartId)
+
+        public IActionResult Minus(Guid carPartId)
         {
-            _shoppingCartService.Remove(cartId);
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            _shoppingCartService.Minus(userId, carPartId);
             return RedirectToAction(nameof(Index));
+        }
+
+        public IActionResult Remove(Guid carPartId)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            _shoppingCartService.Remove(userId, carPartId);
+            return RedirectToAction(nameof(Index));
+        }
+        public IActionResult Confirmation()
+        {
+            return View();
         }
 
     }

@@ -1,11 +1,12 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using VroomParts.Areas.Admin.Application;
-using VroomParts.Areas.Admin.Application.Categories;
+using VroomParts.Application.Categories;
+using VroomParts.Areas.Admin.ViewModels;
+using VroomParts.Domain.Categories;
 using VroomParts.Utility;
 
 namespace VroomParts.Areas.Admin.Controllers
-{ 
+{
     [Area("Admin")]
     [Authorize(Roles = StaticDetail.Role_Admin)]
     public class CategoryController : Controller
@@ -19,7 +20,10 @@ namespace VroomParts.Areas.Admin.Controllers
         public IActionResult Index()
         {
             var categories = _categoryService.GetAll();
-            return View(categories);
+
+            var model = categories.Select(c => new CategoryViewModel() { Id = c.Id ,Name  = c.Name}).ToList();
+
+            return View(model);
         }
         public IActionResult Create()
         {
@@ -27,38 +31,46 @@ namespace VroomParts.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create(CategoryDTO categoryDto)
+        public IActionResult Create(CreateCategoryModel category)
         {
             if (!ModelState.IsValid)
             {
-                return View(categoryDto);
+                return View(category);
             }
 
-            _categoryService.CreateCategory(categoryDto);
+            _categoryService.Create(category);
             return RedirectToAction(nameof(Index));
         }
 
         public IActionResult Edit(Guid id)
         {
-            var category = _categoryService.GetCategoryById(id);
+            var category = _categoryService.GetById(id);
+
             if (category == null)
             {
                 return NotFound();
             }
-            return View(category);
+
+            var model = new CategoryViewModel()
+            {
+                Id = id,
+                Name = category.Name
+            };
+
+            return View(model);
         }
 
         [HttpPost]
-        public IActionResult Edit(Guid id, CategoryDTO categoryDto)
+        public IActionResult Edit(Guid id, CreateCategoryModel category)
         {
             if (!ModelState.IsValid)
             {
-                return View(categoryDto);
+                return View(category);
             }
 
             try
             {
-                _categoryService.EditCategory(id, categoryDto);
+                _categoryService.Edit(id, category);
             }
             catch (ArgumentException)
             {
@@ -70,12 +82,19 @@ namespace VroomParts.Areas.Admin.Controllers
 
         public IActionResult Delete(Guid id)
         {
-            var category = _categoryService.GetCategoryById(id);
+            var category = _categoryService.GetById(id);
             if (category == null)
             {
                 return NotFound();
             }
-            return View(category);
+
+            var model = new CategoryViewModel()
+            {
+                Id = id,
+                Name = category.Name
+            };
+
+            return View(model);
         }
 
         [HttpPost, ValidateAntiForgeryToken]
@@ -83,7 +102,7 @@ namespace VroomParts.Areas.Admin.Controllers
         {
             try
             {
-                _categoryService.DeleteCategory(id);
+                _categoryService.Delete(id);
             }
             catch (ArgumentException)
             {

@@ -28,15 +28,14 @@
                         <!-- ✅ Home Page -->
                         <li class="nav-item">
                             <a class="nav-link" asp-area="Customer" asp-controller="Home" asp-action="Index">
-                                <i class="fas fa-home"></i> Home
+                                <i class="fas fa-home"></i> Products
                             </a>
                         </li>
-                        <!-- ✅ Privacy Policy -->
-                        <li class="nav-item">
-                            <a class="nav-link" asp-area="Customer" asp-controller="Home" asp-action="Privacy">
-                                <i class="fas fa-user-shield"></i> Privacy Policy
-                            </a>
-                        </li>
+
+                        <a class="nav-link text-light" asp-area="Customer" asp-controller="Home" asp-action="About">
+                            About Us
+                        </a>
+
                         @if (User.IsInRole(StaticDetail.Role_Admin))
                         {
                             <!-- ✅ Manage Car Parts -->
@@ -51,11 +50,24 @@
                                     <i class="fas fa-list"></i> Categories
                                 </a>
                             </li>
+                            <!-- ✅ Manage Orders -->
 
                         }  
                         <li class="nav-item">
                             <a class="nav-link" asp-area="Customer" asp-controller="ShoppingCart" asp-action="Index">
                                 <i class="bi bi-cart"> </i> Shopping Cart &nbsp (0) 
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="Customer" asp-controller="Order" asp-action="Index">
+                                <i class="fas fa-list"></i> Orders
+                            </a>
+                        </li>
+                        <!-- ✅ Privacy Policy -->
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="Customer" asp-controller="Home" asp-action="Privacy">
+                                <i class="fas fa-user-shield"></i> Privacy Policy
                             </a>
                         </li>
                     </ul>

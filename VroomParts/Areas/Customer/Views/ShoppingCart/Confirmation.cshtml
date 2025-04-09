@@ -1,0 +1,23 @@
+﻿@{
+    ViewData["Title"] = "Thank You";
+}
+
+<div class="container mt-5">
+    <div class="card shadow border-0">
+        <div class="card-header bg-success text-white text-center py-4">
+            <h2>✅ Order Placed Successfully!</h2>
+        </div>
+        <div class="card-body text-center">
+            <p class="fs-5">Thank you for your purchase. Your order is being processed.</p>
+            <p class="text-muted">You will receive an email confirmation shortly. Shipping may take up to 14 days.</p>
+
+            <hr class="my-4" />
+
+            <h5 class="text-info">Payment Status: <span class="fw-bold text-warning">Pending</span></h5>
+
+            <a asp-controller="Home" asp-action="Index" class="btn btn-primary btn-lg mt-3">
+                ⬅ Back to Home
+            </a>
+        </div>
+    </div>
+</div>

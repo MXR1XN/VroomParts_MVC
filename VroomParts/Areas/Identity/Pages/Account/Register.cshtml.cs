@@ -20,7 +20,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
-using VroomParts.Models.User;
+using VroomParts.Domain.Users;
 using VroomParts.Utility;
 
 namespace VroomParts.Areas.Identity.Pages.Account
