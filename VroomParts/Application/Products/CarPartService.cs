@@ -69,6 +69,11 @@ namespace VroomParts.Application.Products
             return entity.ToDto();
         }
 
+        public List<CarPartDTO> GetParts()
+        {
+            return _carPartRepository.Query().Select(p => p.ToDto()).ToList();
+        }
+
         public List<CarPartDTO> Search(GetPartsRequest request)
         {
             var parts = _carPartRepository.Query();

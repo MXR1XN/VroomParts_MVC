@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using VroomParts.Data;
 
@@ -11,9 +12,11 @@ using VroomParts.Data;
 namespace VroomParts.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    partial class ApplicationDBContextModelSnapshot : ModelSnapshot
+    [Migration("20250410195013_VehicleRecomendation")]
+    partial class VehicleRecomendation
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -393,15 +396,15 @@ namespace VroomParts.Migrations
 
             modelBuilder.Entity("VroomParts.Domain.VehicleRecommendations.VehicleRecommendation", b =>
                 {
-                    b.Property<Guid>("CarPartId")
+                    b.Property<Guid>("CarId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("VehicleId")
+                    b.Property<Guid>("CarPartID")
                         .HasColumnType("uniqueidentifier");
 
-                    b.HasKey("CarPartId", "VehicleId");
+                    b.HasKey("CarId", "CarPartID");
 
-                    b.HasIndex("VehicleId");
+                    b.HasIndex("CarPartID");
 
                     b.ToTable("VehicleRecommendations");
                 });
@@ -525,15 +528,15 @@ namespace VroomParts.Migrations
 
             modelBuilder.Entity("VroomParts.Domain.VehicleRecommendations.VehicleRecommendation", b =>
                 {
-                    b.HasOne("VroomParts.Domain.Products.CarPart", "CarPart")
-                        .WithMany()
-                        .HasForeignKey("CarPartId")
+                    b.HasOne("VroomParts.Domain.Car.Vehicle", "Vehicle")
+                        .WithMany("VehicleRecommendations")
+                        .HasForeignKey("CarId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("VroomParts.Domain.Car.Vehicle", "Vehicle")
-                        .WithMany()
-                        .HasForeignKey("VehicleId")
+                    b.HasOne("VroomParts.Domain.Products.CarPart", "CarPart")
+                        .WithMany("VehicleRecommendations")
+                        .HasForeignKey("CarPartID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -542,9 +545,19 @@ namespace VroomParts.Migrations
                     b.Navigation("Vehicle");
                 });
 
+            modelBuilder.Entity("VroomParts.Domain.Car.Vehicle", b =>
+                {
+                    b.Navigation("VehicleRecommendations");
+                });
+
             modelBuilder.Entity("VroomParts.Domain.Orders.Order", b =>
                 {
                     b.Navigation("LineItems");
+                });
+
+            modelBuilder.Entity("VroomParts.Domain.Products.CarPart", b =>
+                {
+                    b.Navigation("VehicleRecommendations");
                 });
 
             modelBuilder.Entity("VroomParts.Domain.Users.ApplicationUser", b =>

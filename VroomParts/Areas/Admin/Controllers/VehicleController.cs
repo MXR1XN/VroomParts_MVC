@@ -1,75 +1,78 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using VroomParts.Application.Categories;
+using VroomParts.Application.Vehicles;
 using VroomParts.Areas.Admin.ViewModels;
-using VroomParts.Domain.Categories;
 using VroomParts.Utility;
 
 namespace VroomParts.Areas.Admin.Controllers
 {
     [Area("Admin")]
     [Authorize(Roles = StaticDetail.Role_Admin)]
-    public class CategoryController : Controller
+    public class VehicleController : Controller
     {
-        private readonly ICategoryService _categoryService;
+        private readonly IVehicleService _vehicleService;
 
-        public CategoryController(ICategoryService categoryService)
+        public VehicleController(IVehicleService vehicleService) 
         {
-            _categoryService = categoryService;
+            _vehicleService = vehicleService;
         }
+
         public IActionResult Index()
         {
-            var categories = _categoryService.GetAll();
+            var vehicles = _vehicleService.GetVehicles();
 
-            var model = categories.Select(c => new CategoryViewModel() { Id = c.Id ,Name  = c.Name}).ToList();
+            var model = vehicles.Select(c => new VehicleViewModel() { Id = c.Id, Model = c.Model, Make = c.Make, Year = c.Year }).ToList();
 
             return View(model);
         }
+
         public IActionResult Create()
         {
             return View();
         }
 
         [HttpPost]
-        public IActionResult Create(CreateCategoryModel category)
+        public IActionResult Create(VehicleViewModel vehicle)
         {
             if (!ModelState.IsValid)
             {
-                return View(category);
+                return View(vehicle);
             }
 
-            _categoryService.Create(category);
+            _vehicleService.AddVehicle(vehicle);
             return RedirectToAction(nameof(Index));
         }
 
         public IActionResult Edit(Guid id)
         {
-            var category = _categoryService.GetById(id);
+            var vehicle = _vehicleService.GetVehicle(id);
 
-            if (category == null)
+            if (vehicle == null)
             {
                 return NotFound();
             }
 
-            var model = new CategoryViewModel()
+            var model = new VehicleViewModel()
             {
-                Name = category.Name
+                Model = vehicle.Model,
+                Make = vehicle.Make,
+                Year = vehicle.Year
             };
 
             return View(model);
         }
 
         [HttpPost]
-        public IActionResult Edit(Guid id, CreateCategoryModel category)
+        public IActionResult Edit(Guid id, VehicleViewModel vehicle)
         {
             if (!ModelState.IsValid)
             {
-                return View(category);
+                return View(vehicle);
             }
 
             try
             {
-                _categoryService.Edit(id, category);
+                _vehicleService.Edit(vehicle, id);
             }
             catch (ArgumentException)
             {
@@ -81,16 +84,17 @@ namespace VroomParts.Areas.Admin.Controllers
 
         public IActionResult Delete(Guid id)
         {
-            var category = _categoryService.GetById(id);
-            if (category == null)
+            var vehicle = _vehicleService.GetVehicle(id);
+            if (vehicle == null)
             {
                 return NotFound();
             }
 
-            var model = new CategoryViewModel()
+            var model = new VehicleViewModel()
             {
-                Id = id,
-                Name = category.Name
+                Model = vehicle.Model,
+                Make = vehicle.Make,
+                Year = vehicle.Year
             };
 
             return View(model);
@@ -101,7 +105,7 @@ namespace VroomParts.Areas.Admin.Controllers
         {
             try
             {
-                _categoryService.Delete(id);
+                _vehicleService.RemoveVehicle(id);
             }
             catch (ArgumentException)
             {
@@ -112,4 +116,3 @@ namespace VroomParts.Areas.Admin.Controllers
         }
     }
 }
-

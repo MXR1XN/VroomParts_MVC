@@ -1,0 +1,84 @@
+﻿@using VroomParts.Areas.Admin.ViewModels
+@model RecomendationViewModel
+
+@{
+    ViewData["Title"] = "Manage Recommendations";
+}
+
+<h2 class="text-center text-info mb-4">Manage Recommendations</h2>
+
+<div class="row">
+    <div class="col-md-6">
+        <form asp-action="Add" method="post" class="bg-dark text-light p-4 rounded mb-4">
+            <h4>Add Recommendation</h4>
+            <div class="mb-3">
+                <label>Select Car</label>
+                <select asp-for="SelectedCarId" asp-items="Model.Cars" class="form-select" required>
+                    <option value="">-- Choose Car --</option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label>Select Part</label>
+                <select asp-for="SelectedPartId" asp-items="Model.Parts" class="form-select" required>
+                    <option value="">-- Choose Part --</option>
+                </select>
+            </div>
+            <button class="btn btn-success" type="submit">Add</button>
+        </form>
+    </div>
+
+    <div class="col-md-6">
+        <form asp-action="Edit" method="post" class="bg-secondary text-light p-4 rounded mb-4">
+            <h4>Edit Recommendation</h4>
+            <div class="mb-3">
+                <label>Current Car</label>
+                <select asp-for="EditCarId" asp-items="Model.Cars" class="form-select" required>
+                    <option value="">-- Choose Car --</option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label>Current Part</label>
+                <select asp-for="EditPartId" asp-items="Model.Parts" class="form-select" required>
+                    <option value="">-- Choose Current Part --</option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label>New Part</label>
+                <select asp-for="NewPartId" asp-items="Model.Parts" class="form-select" required>
+                    <option value="">-- Choose New Part --</option>
+                </select>
+            </div>
+            <button class="btn btn-warning" type="submit">Edit</button>
+        </form>
+    </div>
+</div>
+
+<hr />
+
+<h4 class="text-center text-white">Current Recommendations</h4>
+
+<table class="table table-bordered table-dark table-striped">
+    <thead>
+        <tr>
+            <th>Car</th>
+            <th>Part</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model.Recomendations)
+    {
+        <tr>
+            <td>@item.VehicleId</td> 
+            <td>@item.CarPartId</td> 
+            <td>
+                <form asp-action="Delete" method="post" style="display:inline">
+                        <input type="hidden" name="carId" value="@item.VehicleId" />
+                        <input type="hidden" name="partId" value="@item.CarPartId" />
+                    <button class="btn btn-danger btn-sm" type="submit">Delete</button>
+                </form>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>

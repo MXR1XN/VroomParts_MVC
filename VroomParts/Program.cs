@@ -20,6 +20,12 @@ using VroomParts.Domain.Orders;
 using VroomParts.Domain.LineItems;
 using VroomParts.Data.Repository.LineItemRepository;
 using VroomParts.Application.AplicationUserService;
+using VroomParts.Application.Vehicles;
+using VroomParts.Domain.Car;
+using VroomParts.Data.Repository.VehicleRepository;
+using VroomParts.Application.Recomendations;
+using VroomParts.Domain.VehicleRecommendations;
+using VroomParts.Data.Repository.RecomendationRepository;
 
 internal class Program
 {
@@ -52,14 +58,18 @@ internal class Program
         builder.Services.AddTransient<ICartService, CartService>();
 		builder.Services.AddTransient<IOrderService, OrderService>();
 		builder.Services.AddTransient<IAplicationUserService, AplicationUserService>();
+        builder.Services.AddTransient<IVehicleService, VehicleService>();
+        builder.Services.AddTransient<IRecomendationService, RecomendationService>();
 
-		builder.Services.AddScoped<ICarPartRepository, CarCartRepository>();
+        builder.Services.AddScoped<ICarPartRepository, CarCartRepository>();
         builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
         builder.Services.AddScoped<ICartRepository, CartRepository>();
         builder.Services.AddScoped<IOrderRepository, OrderRepository>();
         builder.Services.AddScoped<ILineItemRepository, LineItemRepository>();
+        builder.Services.AddScoped<IVehicleRepository, VehicleRepository>();
+        builder.Services.AddScoped<IRecomendationRepository, RecomendationRepository>();
 
-		builder.Services.AddScoped<IApplicationUserRepository, ApplicationUserRepository>();
+        builder.Services.AddScoped<IApplicationUserRepository, ApplicationUserRepository>();
 
 
         builder.Services.AddScoped<IEmailSender, EmailSender>();

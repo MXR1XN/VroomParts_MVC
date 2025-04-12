@@ -13,6 +13,7 @@ namespace VroomParts.Application.Products
         CarPartDTO Delete(Guid id);
 
         List<CarPartDTO> Search(GetPartsRequest request);
+        List<CarPartDTO> GetParts();
 
     }
 }

@@ -1,4 +1,6 @@
-﻿using VroomParts.Domain.Categories;
+﻿using VroomParts.Domain.Car;
+using VroomParts.Domain.Categories;
+using VroomParts.Domain.VehicleRecommendations;
 
 namespace VroomParts.Domain.Products;
 
@@ -15,4 +17,5 @@ public class CarPart
     public Guid? CategoryId { get; set; }
     public Category? Category { get; set; }
 
+    public List<Vehicle> Recommendations { get; set; } = new ();
 }
