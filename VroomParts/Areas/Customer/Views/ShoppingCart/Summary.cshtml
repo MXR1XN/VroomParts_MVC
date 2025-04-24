@@ -28,7 +28,7 @@
 								</div>
 								<div class="col-9">
 									<input asp-for="ApplicaionUserId" type="hidden" />
-									<input asp-for="PhoneNumber" class="form-control" />
+									<input asp-for="PhoneNumber" required class="form-control" />
 									<span asp-validation-for="PhoneNumber" class="text-danger"></span>
 								</div>
 							</div>
@@ -38,7 +38,7 @@
 									<label>Street Address</label>
 								</div>
 								<div class="col-9">
-									<input asp-for="StreetAddress" class="form-control" />
+									<input asp-for="StreetAddress" required class="form-control" />
 									<span asp-validation-for="StreetAddress" class="text-danger"></span>
 								</div>
 							</div>
@@ -48,7 +48,7 @@
 									<label>City</label>
 								</div>
 								<div class="col-9">
-									<input asp-for="City" class="form-control" />
+									<input asp-for="City" required class="form-control" />
 									<span asp-validation-for="City" class="text-danger"></span>
 								</div>
 							</div>
@@ -58,7 +58,7 @@
 									<label>State</label>
 								</div>
 								<div class="col-9">
-									<input asp-for="State" class="form-control" />
+									<input asp-for="State" required class="form-control" />
 									<span asp-validation-for="State" class="text-danger"></span>
 								</div>
 							</div>
@@ -68,8 +68,8 @@
 									<label>Postal Code</label>
 								</div>
 								<div class="col-9">
-									<input asp-for="PostalCode" class="form-control" />
-									<span asp-validation-for="PostalCode" class="text-danger"></span>
+									<input asp-for="PostalCode" required class="form-control" />
+									<span asp-validation-for="PostalCode" class="text-danger "></span>
 								</div>
 							</div>
 						</div>

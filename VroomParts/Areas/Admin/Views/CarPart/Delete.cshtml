@@ -14,7 +14,14 @@
             <h5 class="card-title">@Model.Name</h5>
             <p><strong>Price:</strong> $@Model.Price</p>
             <p>@Model.Description</p>
-            <p><strong>Fits:</strong> @Model.VehicleCompatibility</p>
+            <p><strong>Fits:</strong></p>
+            <ul class="list-unstyled">
+                @foreach (var vehicle in Model.VehicleCompatibility)
+                {
+                    <li>@vehicle.Make @vehicle.Model (@vehicle.Year)</li>
+                }
+            </ul>
+
 
             @if (!string.IsNullOrEmpty(Model.ImageUrl))
             {

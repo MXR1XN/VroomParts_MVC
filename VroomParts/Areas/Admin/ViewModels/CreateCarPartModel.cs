@@ -8,7 +8,7 @@
 
         public string Description { get; set; } = string.Empty;
 
-        public string VehicleCompatibility { get; set; } = string.Empty;
+        public List<Guid> VehicleIds { get; set; } = [];
 
         public string? ImageUrl { get; set; }
 

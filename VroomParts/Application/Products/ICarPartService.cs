@@ -1,19 +1,23 @@
-﻿using VroomParts.Areas.Admin.ViewModels;
-
+﻿using System.Net;
+using VroomParts.Application.Recomendations;
+using VroomParts.Areas.Admin.ViewModels;
 namespace VroomParts.Application.Products
 {
     public interface ICarPartService
     {
-        CarPartDTO GetById(Guid id);
+        CarPartDto GetById(Guid id);
 
-        CarPartDTO Create(CreateCarPartModel model);
+        CarPartDto Create(CreateCarPartModel model);
 
-        CarPartDTO Edit(Guid id, CreateCarPartModel model);
+        CarPartDto Edit(Guid id, CarPartViewModel model);
 
-        CarPartDTO Delete(Guid id);
+        CarPartDto Delete(Guid id);
 
-        List<CarPartDTO> Search(GetPartsRequest request);
-        List<CarPartDTO> GetParts();
+        List<CarPartDto> Search(GetPartsRequest request);
+        List<CarPartDto> GetByCompatibility(SearchRecomendationRequest compatibilityKey);
+        List<CarPartDto> GetParts();
+
+        List<CarPartDto> GetByViewCount();
 
     }
 }

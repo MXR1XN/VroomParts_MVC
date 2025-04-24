@@ -1,72 +1,108 @@
-﻿
+﻿using Microsoft.EntityFrameworkCore;
+using VroomParts.Areas.Customer.ViewModels;
 using VroomParts.Domain.Car;
 using VroomParts.Domain.Products;
-using VroomParts.Domain.VehicleRecommendations;
 
 namespace VroomParts.Application.Recomendations
 {
     public class RecomendationService : IRecomendationService
     {
-        private readonly IRecomendationRepository _recomendationRepository;
+
         private readonly IVehicleRepository _vehicleRepository;
         private readonly ICarPartRepository _carPartRepository;
         public RecomendationService(
-            IRecomendationRepository recomendationRepository,
             IVehicleRepository vehicleRepository,
             ICarPartRepository carPartRepository
             ) 
         {
-            _recomendationRepository = recomendationRepository;
             _vehicleRepository = vehicleRepository;
             _carPartRepository = carPartRepository;
         }
 
         public void AddRecomendation(CreateRecomendationRequest create)
         {
-            var car = _vehicleRepository.Find(create.CarId);
+            var car = _vehicleRepository.Find(create.CarId) 
+                ?? throw new ArgumentException("Car not found");
 
-            var part = _carPartRepository.Find(create.CarId);
+            var part = _carPartRepository.Find(create.PartId)
+                ?? throw new ArgumentException("Part not found");
 
-            var recomendation = _recomendationRepository.Create(new VehicleRecommendation()
-            {
-                VehicleId = create.CarId,
-                CarPartId = create.PartId
-            });
+            car.Recommendations.Add(part);
+
+            _vehicleRepository.Update(car);
         }
 
-        public void EditRecomendation(EditRecomendationRequest edit)
-        {
-            var recomentaion = _recomendationRepository.Query().FirstOrDefault(r => r.VehicleId == edit.CarId && r.CarPartId == edit.PartId);
-
-            if (recomentaion == null) throw new ArgumentException("Recommendation not found");
-
-            var newPart = _carPartRepository.Find(edit.NewPartId);
-
-            recomentaion.CarPartId = edit.NewPartId;
-
-            _recomendationRepository.Update(recomentaion);
-        }
         public void RemoveRecomendation(DeleteRecomendationRequest delete)
         {
-            var recomentaion = _recomendationRepository.Query().FirstOrDefault(r => r.VehicleId == delete.CarId && r.CarPartId == delete.PartId);
+            var car = _vehicleRepository.Query()
+                .Include(c => c.Recommendations)
+                .FirstOrDefault(x => x.Id == delete.CarId)
+                ?? throw new ArgumentException("Car not found");
 
-            if (recomentaion == null) throw new ArgumentException("Recommendation not found");
+            var part = car.Recommendations.FirstOrDefault(x => x.Id == delete.PartId)
+                ?? throw new ArgumentException("Part not found");
 
-            _recomendationRepository.Delete(recomentaion);
-        }
+            car.Recommendations.Remove(part);
 
-        public RecomendationDto Find(GetRecomendationRequest get)
-        {
-            var recomentaion = _recomendationRepository.Query().FirstOrDefault(r => r.VehicleId == get.CarId && r.CarPartId == get.PartId);
-
-            if (recomentaion == null) throw new ArgumentException("Recommendation not found");
-
-            return recomentaion.ToDto();
+            _vehicleRepository.Update(car);
         }
 
         public List<RecomendationDto> GetRecomendations()
         {
-            return _recomendationRepository.Query().Select( r => r.ToDto()).ToList();
+            return _vehicleRepository.Query()
+                .Include(c => c.Recommendations)
+                .SelectMany(x => x.Recommendations
+                    .Select(c => new RecomendationDto 
+                    {
+                        CarPartId = c.Id,
+                        CarPartDescription = c.Description,
+                        CarPartName = c.Name,
+                        CarPartImageUrl = c.ImageUrl,
+                        CarPartPrice = c.Price,
+                        VehicleId = x.Id,
+                        VehicleMake = x.Make,
+                        VehicleModel = x.Model,
+                        VehicleYear = x.Year
+                    })
+                ).ToList();
+        }
+
+        public List<RecomendationDto> GetRecomendationsByModel(SearchRecomendationRequest vehicleSearch)
+        {
+            var query = _vehicleRepository.Query()
+            .Include(c => c.Recommendations).AsQueryable();
+
+
+            if (!string.IsNullOrWhiteSpace(vehicleSearch.Make))
+            {
+                query = query.Where(v => v.Make != null && v.Make.Equals(vehicleSearch.Make));
+            }
+
+            if (!string.IsNullOrWhiteSpace(vehicleSearch.Model))
+            {
+                query = query.Where(v => v.Model != null && v.Model.Equals(vehicleSearch.Model));
+            }
+
+            if (vehicleSearch.Year.HasValue && vehicleSearch.Year.Value > 0)
+            {
+                query = query.Where(v => v.Year == vehicleSearch.Year.Value);
+            }
+
+           return query
+                .SelectMany(x => x.Recommendations
+                    .Select(c => new RecomendationDto
+                    {
+                        CarPartId = c.Id,
+                        CarPartDescription = c.Description,
+                        CarPartName = c.Name,
+                        CarPartImageUrl = c.ImageUrl,
+                        CarPartPrice = c.Price,
+                        VehicleId = x.Id,
+                        VehicleMake = x.Make,
+                        VehicleModel = x.Model,
+                        VehicleYear = x.Year
+                    })
+                ).ToList();
         }
     }
 }

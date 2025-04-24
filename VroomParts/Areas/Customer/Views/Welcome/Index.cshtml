@@ -1,0 +1,192 @@
+﻿@using VroomParts.Areas.Customer.ViewModels
+@model VehicleSearchViewModel
+
+@{
+    ViewData["Title"] = "Find Your Perfect Match";
+}
+
+<style>
+    body {
+        background-color: #111;
+        color: #ccc;
+        font-family: 'Segoe UI', sans-serif;
+        margin: 0;
+        padding: 0;
+    }
+
+    .hero-section {
+        background: url('/images/car-background.jpg') center center / cover no-repeat;
+        min-height: 100vh; 
+        padding: 100px 20px;
+        text-align: center;
+        position: relative;
+    }
+
+
+    .hero-overlay {
+        background-color: rgba(0, 0, 0, 0.7);
+        padding: 200px 30px;
+        border-radius: 20px;
+        max-width: 900px;
+        margin: 0 auto;
+        box-shadow: 0 0 30px rgba(0, 255, 255, 0.3);
+    }
+
+    .hero-section h1 {
+        color: #00ffcc;
+        font-size: 3rem;
+        margin-bottom: 10px;
+    }
+
+    .hero-section p {
+        font-size: 1.3rem;
+        color: #ddd;
+        margin-bottom: 40px;
+    }
+
+    .form-inline {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+        justify-content: center;
+        align-items: end;
+    }
+
+        .form-inline .form-group {
+            flex: 1 1 180px;
+            min-width: 160px;
+        }
+
+        .form-inline label {
+            color: #ccc;
+            font-size: 0.95rem;
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        .form-inline input {
+            background-color: #222;
+            border: 1px solid #444;
+            color: #eee;
+            padding: 8px 12px;
+            border-radius: 8px;
+            width: 100%;
+        }
+
+    .btn-primary {
+        background-color: #00ff99;
+        border: none;
+        padding: 10px 24px;
+        font-size: 1rem;
+        border-radius: 10px;
+        box-shadow: 0 0 10px #00ffcc;
+    }
+
+        .btn-primary:hover {
+            background-color: #00cc88;
+        }
+
+    hr {
+        border-top: 1px solid #444;
+    }
+</style>
+
+<div class="hero-section">
+    <div class="hero-overlay">
+        <h1>Find Parts for Your Ride</h1>
+        <p>Search for compatible car parts tailored to your specific vehicle. Enter your make, model, and year — and we'll do the rest.</p>
+
+        <form asp-action="Index" method="get" class="form-inline">
+            <div class="form-group">
+                <label asp-for="Make">Make</label>
+                <input asp-for="Make" class="form-control" placeholder="e.g. BMW" />
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Model">Model</label>
+                <input asp-for="Model" class="form-control" placeholder="e.g. E60" />
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Year">Year</label>
+                <input asp-for="Year" type="number" class="form-control" placeholder="e.g. 2007" />
+            </div>
+
+            <button type="submit" class="btn btn-primary">Search</button>
+        </form>
+    </div>
+</div>
+
+@if (Model.AllProducts.Any())
+{
+    <hr />
+    <h3 class="text-info text-center mt-4">Compatible Parts for your Vehicle</h3>
+    <div class="row">
+        @foreach (var part in Model.AllProducts)
+        {
+            <div class="col-md-3 mb-4">
+                <a asp-controller="Home" asp-action="Details" asp-route-id="@part.Id"
+                                asp-route-make="@Model.Make"
+                                asp-route-model="@Model.Model"
+                               asp-route-year="@Model.Year"
+                               style="text-decoration: none;">
+                    <div class="card neon-glow h-100">
+                        <img src="@part.ImageUrl" class="card-img-top" alt="@part.Name" style="height: 180px; object-fit: cover;" />
+                        <div class="card-body">
+                            <h5 class="card-title">@part.Name</h5>
+                            <p class="card-text">@part.Description</p>
+                            <p class="card-text text-success fw-bold">$@part.Price</p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        }
+    </div>
+}
+
+@if (Model.Make != null || Model.Model != null)
+{
+    <div class="text-center my-4">
+        <button id="showRecsBtn" onclick="toggleRecommendations()" class="btn btn-primary">
+            Show Bonus Products
+        </button>
+    </div>
+
+    <div id="recommendationsSection" class="row justify-content-center" style="display: none;">
+        @foreach (var part in Model.RecommendedProducts)
+        {
+            <div class="col-md-3 mb-4">
+                <a asp-controller="Home" asp-action="Details" asp-route-id="@part.Id" style="text-decoration: none;">
+                    <div class="card neon-glow h-100">
+                        <img src="@part.ImageUrl" class="card-img-top" alt="@part.Name" style="height: 180px; object-fit: cover;" />
+                        <div class="card-body">
+                            <h5 class="card-title">@part.Name</h5>
+                            <p class="card-text">@part.Description</p>
+                            <p class="card-text text-success fw-bold">$@part.Price</p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        }
+    </div>
+
+    <div id="noRecommendationsMsg" style="display:none; text-align: center; color: #aaa;">
+        <p class="mt-4">There are no bonus products for your vehicle yet!</p>
+    </div>
+}
+
+<script>
+    function toggleRecommendations() {
+        const section = document.getElementById('recommendationsSection');
+        const message = document.getElementById('noRecommendationsMsg');
+        const hasProducts = section && section.children.length > 0;
+
+        if (hasProducts) {
+            section.style.display = 'flex';
+        } else {
+            message.style.display = 'block';
+        }
+
+        document.getElementById('showRecsBtn').style.display = 'none';
+    }
+</script>

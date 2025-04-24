@@ -56,18 +56,6 @@ namespace VroomParts.Areas.Admin.Controllers
             return RedirectToAction("Index");
         }
 
-        [HttpPost]
-        public IActionResult Edit(RecomendationViewModel model)
-        {
-            _recomendationService.EditRecomendation(new EditRecomendationRequest
-            {
-                CarId = model.EditCarId.Value,
-                PartId = model.EditPartId.Value,
-                NewPartId = model.NewPartId.Value
-            });
-
-            return RedirectToAction("Index");
-        }
 
         [HttpPost]
         public IActionResult Delete(Guid carId, Guid partId)

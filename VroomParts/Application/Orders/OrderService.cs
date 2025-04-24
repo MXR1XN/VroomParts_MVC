@@ -62,7 +62,6 @@ namespace VroomParts.Application.Orders
 	            {
 		            Id = Guid.NewGuid(),
 		            Name = c.CarPart!.Name,
-		            VehicleCompatibility = c.CarPart.VehicleCompatibility,
 		            Description = c.CarPart.Description,
 		            Price = c.CarPart.Price,
 		            ImageUrl = c.CarPart.ImageUrl,

@@ -19,7 +19,7 @@ using VroomParts.Data.Repository.OrderRepository;
 using VroomParts.Domain.Orders;
 using VroomParts.Domain.LineItems;
 using VroomParts.Data.Repository.LineItemRepository;
-using VroomParts.Application.AplicationUserService;
+using VroomParts.Application.ApplicationUserService;
 using VroomParts.Application.Vehicles;
 using VroomParts.Domain.Car;
 using VroomParts.Data.Repository.VehicleRepository;
@@ -57,7 +57,7 @@ internal class Program
         builder.Services.AddTransient<ICategoryService, CategoryService>();
         builder.Services.AddTransient<ICartService, CartService>();
 		builder.Services.AddTransient<IOrderService, OrderService>();
-		builder.Services.AddTransient<IAplicationUserService, AplicationUserService>();
+		builder.Services.AddTransient<IApplicationUserService, ApplicationUserService>();
         builder.Services.AddTransient<IVehicleService, VehicleService>();
         builder.Services.AddTransient<IRecomendationService, RecomendationService>();
 
@@ -95,26 +95,39 @@ internal class Program
 
         app.MapRazorPages();
 
+        /* app.MapControllerRoute(
+             name: "areas",
+             pattern: "{area:exists}/{controller=Customer}/{action=Index}/{id?}"
+         );
+
+         // Default Route
+         app.MapControllerRoute(
+             name: "default",
+             pattern: "{controller=Home}/{action=Index}/{id?}"
+         );
+
+         app.MapControllerRoute(
+             name: "areas",
+             pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}"
+         );
+
+         app.MapControllerRoute(
+             name: "default",
+             pattern: "{controller=Home}/{action=Index}/{id?}",
+             defaults: new { area = "Customer" } 
+         );*/
+
+        // Areas (Admin, Customer)
         app.MapControllerRoute(
             name: "areas",
-            pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}"
+            pattern: "{area:exists}/{controller=Welcome}/{action=Index}/{id?}"
         );
 
-        // Default Route
+        // Default 
         app.MapControllerRoute(
             name: "default",
-            pattern: "{controller=Home}/{action=Index}/{id?}"
-        );
-
-        app.MapControllerRoute(
-            name: "areas",
-            pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}"
-        );
-
-        app.MapControllerRoute(
-            name: "default",
-            pattern: "{controller=Home}/{action=Index}/{id?}",
-            defaults: new { area = "Customer" } 
+            pattern: "{controller=Welcome}/{action=Index}/{id?}",
+            defaults: new { area = "Customer" }
         );
 
 

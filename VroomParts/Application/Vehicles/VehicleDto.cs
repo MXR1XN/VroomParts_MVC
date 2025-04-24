@@ -9,6 +9,6 @@ namespace VroomParts.Application.Vehicles
         public string? Make { get; set; }
         public string? Model { get; set; }
         public int Year { get; set; }
-        public List<CarPartDTO> RecomendedProducts { get; set; } = new();
+        public List<CarPartDto> RecomendedProducts { get; set; } = new();
     }
 }

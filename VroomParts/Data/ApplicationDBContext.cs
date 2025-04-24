@@ -7,7 +7,9 @@ using VroomParts.Domain.Categories;
 using VroomParts.Domain.LineItems;
 using VroomParts.Domain.Orders;
 using VroomParts.Domain.Products;
+using VroomParts.Domain.TrackViews;
 using VroomParts.Domain.Users;
+using VroomParts.Domain.VehicleCompatibility;
 using VroomParts.Domain.VehicleRecommendations;
 
 namespace VroomParts.Data
@@ -23,6 +25,9 @@ namespace VroomParts.Data
         public DbSet<LineItem> LineItems { get; set; }
         public DbSet<Vehicle> Vehicles { get; set; }
         public DbSet<VehicleRecommendation> VehicleRecommendations { get; set; }
+        public DbSet<VehicleCompatibility> VehicleCompatibility { get; set; }
+
+        public DbSet<ViewedCarPart> ViewedCarParts { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -45,6 +50,20 @@ namespace VroomParts.Data
                 .HasForeignKey(c => c.CarPartId);
 
                 b.HasKey(c => new { c.CarPartId, c.ApplicationUserId });
+
+            });
+
+            modelBuilder.Entity<ViewedCarPart>(b =>
+            {
+                b.HasOne(v => v.CarPart)
+                .WithMany(v => v.ViewedByUsers)
+                .HasForeignKey(c => c.CarPartId);
+
+                b.HasOne(v => v.User)
+                .WithMany(v => v.ViewedParts)
+                .HasForeignKey(u => u.UserId);
+
+                b.HasKey(v => new { v.CarPartId, v.UserId });
             });
 
             modelBuilder.Entity<ApplicationUser>(b => 
@@ -61,24 +80,20 @@ namespace VroomParts.Data
                 .HasForeignKey(o => o.OrderId);
             });
 
-            /* modelBuilder.Entity<VehicleRecommendation>()
-                 .HasOne(vr => vr.Vehicle)
-                 .WithMany(v => v.Recommendations)
-                 .HasForeignKey(x => x.CarId);
-
-             modelBuilder.Entity<VehicleRecommendation>()
-                 .HasOne(c => c.CarPart)
-                 .WithMany(cr => cr.Recommendations)
-                 .HasForeignKey(x => x.CarPartID);
-
-             modelBuilder.Entity<VehicleRecommendation>().HasKey(c => new { c.CarId, c.CarPartID });*/
-
             modelBuilder.Entity<Vehicle>(b =>
             {
                 b.HasMany(r => r.Recommendations)
                 .WithMany(r => r.Recommendations)
                 .UsingEntity<VehicleRecommendation>();
             });
+
+            modelBuilder.Entity<Vehicle>(b =>
+            {
+                b.HasMany(r => r.Compatibility)
+                .WithMany(r => r.VehicleCompatibility)
+                .UsingEntity<VehicleCompatibility>();
+            });
+
         }
     }
 }

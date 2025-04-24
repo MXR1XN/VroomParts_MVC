@@ -1,12 +1,13 @@
-﻿using VroomParts.Domain.Users;
+﻿using VroomParts.Domain.Cart;
+using VroomParts.Domain.Users;
 
-namespace VroomParts.Application.AplicationUserService
+namespace VroomParts.Application.ApplicationUserService
 {
-	public class AplicationUserService : IAplicationUserService
+	public class ApplicationUserService : IApplicationUserService
 	{
 		private readonly IApplicationUserRepository _userRepository;
 
-		public AplicationUserService(IApplicationUserRepository applicationUser) 
+		public ApplicationUserService(IApplicationUserRepository applicationUser) 
 		{
 			_userRepository = applicationUser;
 		}

@@ -9,5 +9,6 @@ namespace VroomParts.Domain.Car
         public string? Model { get; set; }
         public int Year { get; set; }
         public List<CarPart> Recommendations { get; set; } = new ();
+        public List<CarPart> Compatibility { get; set; } = new();
     }
 }

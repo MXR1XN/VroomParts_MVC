@@ -1,10 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
-using VroomParts.Application.AplicationUserService;
+using VroomParts.Application.ApplicationUserService;
 using VroomParts.Application.Cart;
 using VroomParts.Application.Orders;
 using VroomParts.Areas.Customer.ViewModels;
+using VroomParts.Domain.Products;
 
 namespace VroomParts.Areas.Customer.Controllers
 {
@@ -14,16 +15,16 @@ namespace VroomParts.Areas.Customer.Controllers
     {
         private readonly ICartService _shoppingCartService;
         private readonly IOrderService _orderService;
-        private readonly IAplicationUserService _aplicationUserService;
+        private readonly IApplicationUserService _applicationUserService;
 
 		public ShoppingCartController(
             ICartService shoppingCartService, 
             IOrderService orderService,
-			IAplicationUserService aplicationUserService)
+			IApplicationUserService aplicationUserService)
         {
             _shoppingCartService = shoppingCartService;
             _orderService = orderService;
-            _aplicationUserService = aplicationUserService;
+            _applicationUserService = aplicationUserService;
 
         }
 
@@ -37,7 +38,7 @@ namespace VroomParts.Areas.Customer.Controllers
             var model = new CartProductsViewModel() 
             {
                 Header = shoppingCartDto.Header,
-                Products = shoppingCartDto.Products.Select(c => new CartProductViewModel() 
+                Products = shoppingCartDto.Products.Select(c => new ProductViewModel() 
                 { 
                     Id = c.Id,
                     Name = c.Name,
@@ -45,7 +46,14 @@ namespace VroomParts.Areas.Customer.Controllers
                     ImageUrl = c.ImageUrl,
                     Price = c.Price,
                     Quantity = c.Count,
-                    VehicleCompatibility = c.VehicleCompatibility
+                    VehicleCompatibility = c.VehicleCompatibility.Select(v => new VehicleSearchViewModel 
+                    {
+                        Make = v.Make,
+                        Model = v.Model,
+                        Year = v.Year
+                    }).ToList(),
+
+
                 }).ToList(),
                 TotalPrice = shoppingCartDto.TotalPrice,    
             };
@@ -58,7 +66,7 @@ namespace VroomParts.Areas.Customer.Controllers
 			var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var cart = _shoppingCartService.GetCart(userId);
 
-            var user = _aplicationUserService.GetUser(userId);
+            var user = _applicationUserService.GetUser(userId);
 
 			var model = new OrderModel
 			{

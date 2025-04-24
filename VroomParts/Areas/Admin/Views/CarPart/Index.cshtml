@@ -3,25 +3,40 @@
 
 <h2 class="text-primary text-center">Available Car Parts</h2>
 
-<form method="get" id="filterForm">
-    <label for="categoryFilter">Filter by Category:</label>
+<form method="get" asp-action="Index" id="filterForm" class="mb-4">
+    <div class="d-flex flex-wrap gap-3 align-items-center">
 
-    @foreach (var category in ViewBag.Categories)
-    {
-        <div>
-            <input type="checkbox" class="categoryCheckbox" id="category_@category.Id"
-                   name="CategoryIds" value="@category.Id"
-            @(ViewBag.SelectedCategories != null && ViewBag.SelectedCategories.Contains(category.Id) ? "checked" : "")>
-            <label for="category_@category.Id">@category.Name</label>
+        <div class="d-flex align-items-center">
+            <label class="me-2">Category:</label>
+            @foreach (var category in ViewBag.Categories)
+            {
+                <div class="form-check form-check-inline">
+                    <input type="checkbox" name="CategoryIds" value="@category.Id"
+                           class="form-check-input category-checkbox"
+                    @(ViewBag.SelectedCategories.Contains(category.Id) ? "checked" : "") />
+                    <label class="form-check-label">@category.Name</label>
+                </div>
+            }
         </div>
-    }
 
-    <button type="submit" class="btn btn-primary mt-2">Apply Filter</button>
+        <div>
+            <label class="me-2">Part Name:</label>
+            <input type="text" name="SearchPart" class="form-control d-inline-block w-auto"
+                   value="@Context.Request.Query["SearchPart"]" />
+        </div>
+
+        <div>
+            <label class="me-2">Vehicle:</label>
+            <input type="text" name="PartPartCompatibility" class="form-control d-inline-block w-auto"
+                   value="@Context.Request.Query["PartPartCompatibility"]" />
+        </div>
+
+        <button type="submit" class="btn btn-primary">Apply</button>
+    </div>
 </form>
 
 
 
-<!-- ✅ Add Create Button -->
 <div class="text-end mb-3">
     <a asp-action="Create" class="btn btn-success">
         <i class="fas fa-plus"></i> Add New Car Part
@@ -45,7 +60,28 @@ else
                         <h5 class="card-title">@part.Name</h5>
                         <p><strong>Price:</strong> $@part.Price</p>
                         <p>@part.Description</p>
-                        <p><strong>Fits:</strong> @part.VehicleCompatibility</p>
+                        <p>
+                            <strong>Fits:</strong>
+                            @if (part.VehicleCompatibility.Any())
+                            {
+                                <ul>
+                                    @foreach (var v in part.VehicleCompatibility)
+                                    {
+                                        <li>
+                                            <span class="text-info">@v.Make</span>
+                                            <span class="text-info">@v.Model</span>
+                                            <span class="text-info">(@v.Year)</span>
+                                        </li>
+                                    }
+                                </ul>
+                            }
+                            else
+                            {
+                                <span class="text-warning">No vehicle compatibility listed</span>
+                            }
+                        </p>
+
+
 
                         @if (!string.IsNullOrEmpty(part.ImageUrl))
                         {
@@ -57,7 +93,6 @@ else
                         {
                             <p class="text-muted">No Image Available</p>
                         }
-
 
                         <a class="btn btn-warning" asp-action="Edit" asp-route-id="@part.Id">
                             <i class="fas fa-edit"></i> Edit

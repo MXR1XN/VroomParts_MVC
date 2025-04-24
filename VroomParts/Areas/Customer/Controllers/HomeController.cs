@@ -38,12 +38,17 @@ namespace VroomParts.Areas.Customer.Controllers
                 return NotFound();
             }
 
-            var modelCarParts = carParts.Select(c => new CartProductViewModel()
+            var modelCarParts = carParts.Select(c => new ProductViewModel()
             {
                 Id = c.Id,
                 Name = c.Name,
                 Description = c.Description,
-                VehicleCompatibility = c.VehicleCompatibility,
+                VehicleCompatibility = c.VehicleCompatibilities.Select(v => new VehicleSearchViewModel 
+                {
+                    Make = v.Make,
+                    Model = v.Model,
+                    Year = v.Year
+                }).ToList(),
                 ImageUrl = c.ImageUrl,
                 Price = c.Price
             }).ToList();
@@ -64,12 +69,19 @@ namespace VroomParts.Areas.Customer.Controllers
                 return NotFound();
             }
 
-            var model = new CartProductViewModel()
+            TempData["LastViewedId"] = Id;
+
+            var model = new ProductViewModel()
             {
                 Id = Id,
                 Name = carPart.Name,
                 Description = carPart.Description,
-                VehicleCompatibility = carPart.VehicleCompatibility,
+                VehicleCompatibility = carPart.VehicleCompatibilities.Select(v => new VehicleSearchViewModel
+                {
+                    Make = v.Make,
+                    Model = v.Model,
+                    Year = v.Year
+                }).ToList(),
                 ImageUrl = carPart.ImageUrl,
                 Price = carPart.Price,
                 Quantity = 1
@@ -83,7 +95,9 @@ namespace VroomParts.Areas.Customer.Controllers
         public IActionResult Details(Guid Id, int quantity = 1)
         {
             var claimsIdentity = (ClaimsIdentity)User.Identity;
+
             var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
             if (userId == null)
             {
                 return RedirectToAction("Login", "Account");

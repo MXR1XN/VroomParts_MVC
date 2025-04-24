@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using VroomParts.Data;
 
@@ -11,9 +12,11 @@ using VroomParts.Data;
 namespace VroomParts.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    partial class ApplicationDBContextModelSnapshot : ModelSnapshot
+    [Migration("20250417202245_AddedVehicleCompatibility")]
+    partial class AddedVehicleCompatibility
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -387,25 +390,7 @@ namespace VroomParts.Migrations
                     b.ToTable("CarParts");
                 });
 
-            modelBuilder.Entity("VroomParts.Domain.TrackViews.ViewedCarPart", b =>
-                {
-                    b.Property<Guid>("CarPartId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("ViewCount")
-                        .HasColumnType("int");
-
-                    b.HasKey("CarPartId", "UserId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("ViewedCarParts");
-                });
-
-            modelBuilder.Entity("VroomParts.Domain.VehicleCompatibility.VehicleCompatibility", b =>
+            modelBuilder.Entity("VroomParts.Domain.VehicleCompatibility", b =>
                 {
                     b.Property<Guid>("CarPartId")
                         .HasColumnType("uniqueidentifier");
@@ -552,26 +537,7 @@ namespace VroomParts.Migrations
                     b.Navigation("Category");
                 });
 
-            modelBuilder.Entity("VroomParts.Domain.TrackViews.ViewedCarPart", b =>
-                {
-                    b.HasOne("VroomParts.Domain.Products.CarPart", "CarPart")
-                        .WithMany("ViewedByUsers")
-                        .HasForeignKey("CarPartId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("VroomParts.Domain.Users.ApplicationUser", "User")
-                        .WithMany("ViewedParts")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("CarPart");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("VroomParts.Domain.VehicleCompatibility.VehicleCompatibility", b =>
+            modelBuilder.Entity("VroomParts.Domain.VehicleCompatibility", b =>
                 {
                     b.HasOne("VroomParts.Domain.Products.CarPart", null)
                         .WithMany()
@@ -610,18 +576,11 @@ namespace VroomParts.Migrations
                     b.Navigation("LineItems");
                 });
 
-            modelBuilder.Entity("VroomParts.Domain.Products.CarPart", b =>
-                {
-                    b.Navigation("ViewedByUsers");
-                });
-
             modelBuilder.Entity("VroomParts.Domain.Users.ApplicationUser", b =>
                 {
                     b.Navigation("CartProducts");
 
                     b.Navigation("Orders");
-
-                    b.Navigation("ViewedParts");
                 });
 #pragma warning restore 612, 618
         }

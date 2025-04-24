@@ -35,9 +35,26 @@
     </div>
 
     <div class="mb-3">
-        <label asp-for="VehicleCompatibility" class="form-label"></label>
-        <input asp-for="VehicleCompatibility" class="form-control" />
+        <label class="form-label">Compatible Vehicles</label>
+        <div class="form-check">
+            @foreach (var vehicle in ViewBag.Vehicles)
+            {
+                var isChecked = Model.VehicleCompatibility.Any(v => v.Id == vehicle.Id);
+                <div>
+                    <input type="checkbox"
+                           name="VehicleIds"
+                           value="@vehicle.Id"
+                           class="form-check-input"
+                           id="vehicle_@vehicle.Id"
+                    @(isChecked ? "checked" : "") />
+                    <label class="form-check-label" for="vehicle_@vehicle.Id">
+                        @vehicle.Make @vehicle.Model (@vehicle.Year)
+                    </label>
+                </div>
+            }
+        </div>
     </div>
+
 
     <div class="mb-3">
         <label asp-for="ImageUrl" class="form-label"></label>
@@ -49,6 +66,7 @@
             </div>
         }
     </div>
+
     <a asp-action="Index" class="btn btn-secondary">Cancel</a>
     <button type="submit" class="btn btn-primary">Save Changes</button>
 </form>

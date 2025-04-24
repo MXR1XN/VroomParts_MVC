@@ -1,4 +1,6 @@
-﻿namespace VroomParts.Application.Cart
+﻿using VroomParts.Application.Vehicles;
+
+namespace VroomParts.Application.Cart
 {
     public class CartProductDTO
     {
@@ -8,7 +10,7 @@
 
         public string? Description { get; set; }
 
-        public string? VehicleCompatibility { get; set; }
+        public List<VehicleDto> VehicleCompatibility { get; set; } = [];
 
         public string? ImageUrl { get; set; }
 

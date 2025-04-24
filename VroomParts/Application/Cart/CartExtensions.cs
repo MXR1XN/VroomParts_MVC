@@ -12,7 +12,6 @@ namespace VroomParts.Application.Cart
                 Name = vm.CarPart.Name,
                 Price = vm.CarPart.Price,
                 Description = vm.CarPart.Description,
-                VehicleCompatibility = vm.CarPart.VehicleCompatibility,
                 Count = vm.Count,
                 Category = vm.CarPart.Category!.Name,
                 ImageUrl = vm.CarPart.ImageUrl

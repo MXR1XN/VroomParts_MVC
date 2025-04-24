@@ -15,6 +15,6 @@ namespace VroomParts.Areas.Admin.ViewModels
         public List<SelectListItem> Cars { get; set; }
         public List<SelectListItem> Parts { get; set; }
 
-        public List<RecomendationDto> Recomendations { get; set; }
+        public List<RecomendationDto> Recomendations { get; set; } // to DO
     }
 }

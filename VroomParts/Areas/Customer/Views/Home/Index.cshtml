@@ -1,115 +1,245 @@
 ﻿@using VroomParts.Areas.Customer.ViewModels
-@model List<CartProductViewModel>
+@model List<ProductViewModel>
 
 @{
     ViewData["Title"] = "Available Car Parts";
 }
+<style>
+    body {
+        background-color: #121212;
+        color: #e0e0e0;
+    }
+
+    .card {
+        background-color: #1a1a1a;
+        border: 1px solid #262626;
+        box-shadow: 0 0 8px rgba(255, 255, 255, 0.03);
+        transition: transform 0.3s, box-shadow 0.3s;
+        color: #e0e0e0;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+
+        .card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 0 12px rgba(255, 255, 255, 0.06);
+        }
+
+    .card-body {
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+
+    .card-title {
+        color: #ddd;
+        font-weight: 600;
+    }
+
+    .card-img-top {
+        height: 200px;
+        object-fit: cover;
+        border-bottom: 1px solid #262626;
+    }
+
+    .btn-primary {
+        background-color: transparent;
+        border: 1px solid #555;
+        color: #ccc;
+        transition: all 0.3s;
+    }
+
+        .btn-primary:hover {
+            background-color: #262626;
+            color: #fff;
+        }
+
+    .btn, .form-control {
+        height: 42px;
+        padding: 0.375rem 0.75rem;
+        font-size: 1rem;
+        line-height: 1.5;
+    }
+
+    .btn-buy {
+        background-color: #262626;
+        border: 1px solid #8B0000;
+        color: #fff;
+        transition: all 0.3s;
+    }
+
+        .btn-buy:hover {
+            background-color: #8B0000;
+            border-color: #a30000;
+            color: #fff;
+        }
+
+    .form-control {
+        background-color: #1f1f1f;
+        color: #fff;
+        border: 1px solid #555;
+        font-weight: 500;
+        transition: border-color 0.3s, box-shadow 0.3s;
+    }
+
+        .form-control:focus {
+            border-color: #8B0000;
+            box-shadow: 0 0 5px rgba(139, 0, 0, 0.6);
+            outline: none;
+        }
+
+    .form-label {
+        color: #ddd;
+        font-weight: 500;
+    }
+
+    .text-muted {
+        color: #777 !important;
+    }
+
+    .dropdown-menu {
+        background-color: #1f1f1f !important;
+        border: 1px solid #444;
+    }
+
+        .dropdown-menu .form-check-label {
+            color: #ccc;
+        }
+
+        .dropdown-menu .form-check-input {
+            background-color: #222;
+            border: 1px solid #666;
+        }
+
+            .dropdown-menu .form-check-input:checked {
+                background-color: #8B0000;
+                border-color: #8B0000;
+            }
+</style>
 
 <div class="text-center mb-4">
-    <h1 class="text-white">Welcome to VroomParts</h1>
+    <h1>Welcome to VroomParts</h1>
     <p>Find the best car parts for your vehicle!</p>
 </div>
 
 <!-- Filters -->
 <form method="get" asp-action="Index" class="mb-4">
-    <div class="row align-items-center">
-        <!-- ✅ MULTISELECT DROPDOWN Category Filter (White Dropdown) -->
-        <div class="col-md-2">
-            <label class="form-label d-block">Filter by Category:</label>
-            <div class="dropdown">
-                <button class="btn btn-light dropdown-toggle w-100 text-dark" type="button" id="categoryDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                    Select Categories
-                </button>
-                <ul class="dropdown-menu p-3 w-100" style="max-height: 250px; overflow-y: auto; background-color: white;">
-                    <li>
-                        <div class="form-check">
-                            <input type="checkbox" class="form-check-input" id="noCategorySelected">
-                            <label class="form-check-label" for="noCategorySelected">No Category Selected</label>
-                        </div>
-                    </li>
-                    <li><hr class="dropdown-divider"></li>
-                    @foreach (var category in ViewBag.Categories)
-                    {
+    <div class="container-fluid">
+        <div class="row gx-4 gy-2 align-items-end">
+            <div class="col-lg-2 col-md-4">
+                <label class="form-label d-block">Filter by Category:</label>
+                <div class="dropdown">
+                    <button class="btn btn-light dropdown-toggle w-100" type="button" id="categoryDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                        Select Categories
+                    </button>
+                    <ul class="dropdown-menu p-3 w-100" style="max-height: 250px; overflow-y: auto;">
                         <li>
                             <div class="form-check">
-                                <input type="checkbox" class="form-check-input categoryCheckbox" name="CategoryIds" value="@category.Id"
-                                @(ViewBag.SelectedCategories != null && ((List<Guid>)ViewBag.SelectedCategories).Contains(category.Id) ? "checked" : "")>
-                                <label class="form-check-label">@category.Name</label>
+                                <input type="checkbox" class="form-check-input" id="noCategorySelected">
+                                <label class="form-check-label" for="noCategorySelected">No Category Selected</label>
                             </div>
                         </li>
-                    }
-                </ul>
+                        <li><hr class="dropdown-divider"></li>
+                        @foreach (var category in ViewBag.Categories)
+                        {
+                            <li>
+                                <div class="form-check">
+                                    <input type="checkbox" class="form-check-input categoryCheckbox" name="CategoryIds" value="@category.Id"
+                                    @(ViewBag.SelectedCategories != null && ((List<Guid>)ViewBag.SelectedCategories).Contains(category.Id) ? "checked" : "")>
+                                    <label class="form-check-label">@category.Name</label>
+                                </div>
+                            </li>
+                        }
+                    </ul>
+                </div>
             </div>
-        </div>
 
-        <!-- ✅ Price Filters -->
-        <div class="col-md-2">
-            <label class="form-label">Price from</label>
-            <input type="number" class="form-control" name="MinPrice" step="0.01" value="@Context.Request.Query["MinPrice"]">
-        </div>
-        <div class="col-md-2">
-            <label class="form-label">Price to</label>
-            <input type="number" class="form-control" name="MaxPrice" step="0.01" value="@Context.Request.Query["MaxPrice"]">
-        </div>
+            <div class="col-lg-2 col-md-4">
+                <label class="form-label">Price from</label>
+                <input type="number" class="form-control" name="MinPrice" step="0.01" value="@Context.Request.Query["MinPrice"]">
+            </div>
+            <div class="col-lg-2 col-md-4">
+                <label class="form-label">Price to</label>
+                <input type="number" class="form-control" name="MaxPrice" step="0.01" value="@Context.Request.Query["MaxPrice"]">
+            </div>
 
-        <!-- ✅ Search Field -->
-        <div class="col-md-2">
-            <label class="form-label">Search</label>
-            <input type="text" class="form-control" name="SearchPart" value="@Context.Request.Query["SearchPart"]">
-        </div>
+            <div class="col-lg-2 col-md-4">
+                <label class="form-label">Search</label>
+                <input type="text" class="form-control" name="SearchPart" value="@Context.Request.Query["SearchPart"]">
+            </div>
 
-        <!-- ✅ Vehicle Compatibility -->
-        <div class="col-md-2">
-            <label class="form-label">Vehicle Compatibility</label>
-            <input type="text" class="form-control" name="PartPartCompatibility" value="@Context.Request.Query["PartPartCompatibility"]">
-        </div>
+            <div class="col-lg-2 col-md-4">
+                <label class="form-label">Vehicle Compatibility</label>
+                <input type="text" class="form-control" name="PartPartCompatibility" value="@Context.Request.Query["PartPartCompatibility"]">
+            </div>
 
-        <!-- ✅ Filter Button (Now Centered Properly) -->
-        <div class="col-md-2 d-flex align-items-end">
-            <button type="submit" class="btn btn-primary w-100">Apply Filters</button>
+            <div class="col-lg-2 col-md-4 d-flex">
+                <div class="d-flex w-100 gap-2">
+                    <button type="submit" class="btn btn-buy w-50">Apply</button>
+                    <a href="@Url.Action("Index", "Home")" class="btn btn-outline-secondary w-50">Clear</a>
+                </div>
+            </div>
         </div>
     </div>
 </form>
 
-<!-- ✅ JavaScript for "No Category Selected" -->
-<script>
-    document.getElementById("noCategorySelected").addEventListener("change", function () {
-        let categoryCheckboxes = document.querySelectorAll(".categoryCheckbox");
-        if (this.checked) {
-            categoryCheckboxes.forEach(checkbox => checkbox.checked = false);
-        }
-    });
-
-    document.querySelectorAll(".categoryCheckbox").forEach(checkbox => {
-        checkbox.addEventListener("change", function () {
-            if (this.checked) {
-                document.getElementById("noCategorySelected").checked = false;
-            }
-        });
-    });
-</script>
-
-<!-- Product List -->
-<div class="row">
+<!-- Product Cards -->
+<div class="row gx-4 gy-4">
     @if (Model != null && Model.Any())
     {
-        @foreach (var part in Model)
+        foreach (var part in Model)
         {
-            <div class="col-md-4 mb-4">
-                <div class="card">
+            <div class="col-xl-4 col-lg-6 col-md-6">
+                <div class="card w-100 d-flex flex-column" data-part-id="@part.Id">
                     <img src="@part.ImageUrl" class="card-img-top" alt="@part.Name" onerror="this.src='/images/default-placeholder.png'">
-                    <div class="card-body">
-                        <h5 class="card-title">@part.Name</h5>
-                        <p class="card-text">@part.Description</p>
-                        <p class="text-muted"><strong>Price:</strong> $@part.Price</p>
-                        <p class="text-muted"><strong>Vehicle Compatibility:</strong> @part.VehicleCompatibility</p>
-
-                        <div class="d-flex gap-2">
-                            <a asp-action="Details" asp-route-Id="@part.Id" class="btn btn-primary w-50">View Details</a>
-                            <a asp-action="Details" asp-route-Id="@part.Id" class="btn btn-success w-50">Buy Now</a>
+                    <div class="card-body d-flex flex-column justify-content-between">
+                        <div>
+                            <h5 class="card-title">@part.Name</h5>
+                            <p class="card-text">@part.Description</p>
+                            <p><strong>Price:</strong> $@part.Price</p>
+                            <p>
+                                <strong>Compatible with:</strong>
+                                @if (part.VehicleCompatibility != null && part.VehicleCompatibility.Any())
+                                {
+                                    <ul class="mb-0">
+                                        @foreach (var v in part.VehicleCompatibility)
+                                        {
+                                            <li>@v.Make @v.Model (@v.Year)</li>
+                                        }
+                                    </ul>
+                                }
+                                else
+                                {
+                                    <span>Not specified</span>
+                                }
+                            </p>
                         </div>
 
+                        <div class="d-flex gap-2 mt-3">
+                            <a asp-action="Details"
+                               asp-route-id="@part.Id"
+                               asp-route-MinPrice="@Context.Request.Query["MinPrice"]"
+                               asp-route-MaxPrice="@Context.Request.Query["MaxPrice"]"
+                               asp-route-SearchPart="@Context.Request.Query["SearchPart"]"
+                               asp-route-PartPartCompatibility="@Context.Request.Query["PartPartCompatibility"]"
+                               asp-route-CategoryIds="@string.Join(",", Context.Request.Query["CategoryIds"])"
+                               class="btn btn-primary w-50">
+                                View Details
+                            </a>
 
+                            <a asp-action="Details"
+                               asp-route-id="@part.Id"
+                               asp-route-MinPrice="@Context.Request.Query["MinPrice"]"
+                               asp-route-MaxPrice="@Context.Request.Query["MaxPrice"]"
+                               asp-route-SearchPart="@Context.Request.Query["SearchPart"]"
+                               asp-route-PartPartCompatibility="@Context.Request.Query["PartPartCompatibility"]"
+                               asp-route-CategoryIds="@string.Join(",", Context.Request.Query["CategoryIds"])"
+                               class="btn btn-buy w-50">
+                                Buy Now
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -118,7 +248,7 @@
     else
     {
         <div class="col-md-12 text-center">
-            <p class="text-muted">No car parts found matching the selected criteria.</p>
+            <p>No car parts found matching the selected criteria.</p>
         </div>
     }
 </div>

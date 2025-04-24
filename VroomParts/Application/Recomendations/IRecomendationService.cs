@@ -4,8 +4,7 @@
     {
         void AddRecomendation(CreateRecomendationRequest create);
         void RemoveRecomendation(DeleteRecomendationRequest delete);
-        void EditRecomendation(EditRecomendationRequest edit);
-        RecomendationDto Find(GetRecomendationRequest get);
+        List<RecomendationDto> GetRecomendationsByModel(SearchRecomendationRequest model);
         List<RecomendationDto> GetRecomendations();
     }
 }

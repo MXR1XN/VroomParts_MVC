@@ -2,7 +2,7 @@
 {
     public class GetPartsRequest
     {
-        public List<Guid>? CategoryIds { get; set; } = new List<Guid>();
+        public List<Guid>? CategoryIds { get; set; } = [];
         public decimal? MinPrice { get; set; }
         public decimal? MaxPrice { get; set; }
         public string? SearchPart { get; set; }
