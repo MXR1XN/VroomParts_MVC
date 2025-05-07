@@ -13,7 +13,7 @@ namespace VroomParts.Application.Cart
                 Price = vm.CarPart.Price,
                 Description = vm.CarPart.Description,
                 Count = vm.Count,
-                Category = vm.CarPart.Category!.Name,
+                Category = vm.CarPart.Category?.Name ?? "Unknown",
                 ImageUrl = vm.CarPart.ImageUrl
             };
         }

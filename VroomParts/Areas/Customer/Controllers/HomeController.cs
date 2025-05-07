@@ -69,6 +69,16 @@ namespace VroomParts.Areas.Customer.Controllers
                 return NotFound();
             }
 
+            var claimsIdentity = (ClaimsIdentity)User.Identity;
+
+            var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+
+            if (!string.IsNullOrEmpty(userId))
+            {
+                _carPartService.TrackView(userId, Id);
+            }
+
             TempData["LastViewedId"] = Id;
 
             var model = new ProductViewModel()

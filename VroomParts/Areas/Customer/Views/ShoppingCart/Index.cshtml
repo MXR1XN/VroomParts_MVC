@@ -1,93 +1,278 @@
 ﻿@using VroomParts.Areas.Customer.ViewModels
 @model CartProductsViewModel
 
-<form method="post">
-    <br />
-    <div class="card shadow border-0">
-        <div class="card-header bg-secondary bg-gradient text-light ml-0 py-4">
-            <div class="row px-4">
-                <div class="col-6">
-                    <h3 class="pt-2 text-white">Shopping Cart</h3>
+@{
+    ViewData["Title"] = "Shopping Cart";
+}
+
+<style>
+    body {
+        background-color: #111;
+        color: #ccc;
+        font-family: 'Segoe UI', sans-serif;
+    }
+
+    .cart-container {
+        max-width: 1200px;
+        margin: 60px auto;
+        padding: 30px;
+        background-color: #1c1c1c;
+        border-radius: 20px;
+        box-shadow: 0 0 20px rgba(0, 255, 255, 0.1); /* неон */
+    }
+
+    .cart-header h3 {
+        color: #fff;
+        font-size: 2.2rem;
+    }
+
+    .product-row {
+        border-bottom: 1px solid #333;
+        padding: 20px 0;
+        display: flex;
+        align-items: center;
+        gap: 20px;
+    }
+
+    .product-img img {
+        max-width: 100%;
+        max-height: 180px;
+        object-fit: contain;
+        border-radius: 10px;
+        background-color: #fff;
+    }
+
+    .product-info h5 {
+        color: #fff;
+        margin-bottom: 10px;
+    }
+
+    .product-info p {
+        color: #aaa;
+        font-size: 0.9rem;
+    }
+
+    .btn-group a {
+        margin: 0 5px;
+    }
+
+    .total-box {
+        background: #222;
+        padding: 20px;
+        border-radius: 10px;
+        margin-top: 30px;
+        text-align: center;
+        box-shadow: 0 0 15px rgba(0, 255, 255, 0.1); /* легкий неон */
+    }
+
+        .total-box h4 {
+            font-size: 1.8rem;
+            color: #fff;
+        }
+
+    .btn-checkout {
+        margin-top: 20px;
+        width: 100%;
+        padding: 12px;
+        font-size: 1.2rem;
+        background: linear-gradient(145deg, #1c1c1c, #2a2a2a);
+        color: #00ffff;
+        border: 1px solid #00ffff;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 255, 255, 0.2);
+        transition: all 0.3s ease-in-out;
+    }
+
+        .btn-checkout:hover {
+            background-color: #00ffff;
+            color: #111;
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.6);
+        }
+
+    .suggested-toggle {
+        text-align: center;
+        margin-top: 50px;
+    }
+
+    .suggested-products {
+        max-height: 0;
+        opacity: 0;
+        overflow: hidden;
+        transition: all 0.5s ease-in-out;
+    }
+
+        .suggested-products.active {
+            max-height: 1000px;
+            opacity: 1;
+        }
+
+    .card {
+        background-color: #1c1c1c !important;
+        color: #ccc;
+        border: 1px solid #2a2a2a;
+        border-radius: 12px;
+        box-shadow: 0 0 15px rgba(0, 255, 255, 0.1); /* неон */
+    }
+
+    .card-header {
+        background-color: #1c1c1c;
+        color: #ccc;
+        border-bottom: 1px solid #333;
+    }
+
+    .suggested-card {
+        background: #1c1c1c;
+        border: 1px solid rgba(0, 255, 255, 0.2);
+        border-radius: 12px;
+        padding: 15px;
+        color: #fff;
+        box-shadow: 0 0 12px rgba(0, 255, 255, 0.2); /* неоновий ефект */
+        transition: all 0.3s ease-in-out;
+    }
+
+        .suggested-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 0 25px rgba(0, 255, 255, 0.4);
+        }
+
+        .suggested-card img {
+            object-fit: contain;
+            max-height: 160px;
+        }
+
+    .btn-toggle {
+        display: block;
+        margin: 20px auto;
+        background-color: #000;
+        color: #fff;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 8px;
+        font-weight: bold;
+        transition: background-color 0.3s, box-shadow 0.3s;
+        box-shadow: 0 0 10px rgba(0, 255, 255, 0.2);
+    }
+
+        .btn-toggle:hover {
+            background-color: #00ffff;
+            color: #000;
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.4);
+        }
+
+    .card-footer .btn-outline-primary {
+        border-color: #00ffff;
+        color: #00ffff;
+        background-color: transparent;
+        transition: 0.3s;
+    }
+
+        .card-footer .btn-outline-primary:hover {
+            background-color: rgba(0, 255, 255, 0.1);
+            box-shadow: 0 0 10px rgba(0, 255, 255, 0.6);
+            color: #111;
+        }
+</style>
+
+
+<div class="cart-container">
+    <div class="cart-header mb-4 d-flex justify-content-between align-items-center">
+        <h3>🛒 Shopping Cart</h3>
+        <a asp-area="Customer" asp-controller="Home" asp-action="Index"
+           class="btn btn-outline-light">
+            ← Continue Shopping
+        </a>
+    </div>
+
+    @if (Model.Products == null || !Model.Products.Any())
+    {
+        <div class="text-center my-5">
+            <h4 class="text-muted">Your cart is empty. Please add some products first.</h4>
+        </div>
+    }
+    else
+    {
+        @foreach (var item in Model.Products)
+        {
+            <div class="product-row">
+                <div class="col-md-3 product-img">
+                    <img src="@item.ImageUrl" onerror="this.src='/images/default-placeholder.png'" />
                 </div>
-                <div class="col-md-2 ms-auto text-end">
-                    <a asp-area="Customer" asp-controller="Home" asp-action="Index"
-                       class="btn btn-outline-dark text-uppercase fw-bold py-3 px-5">
-                        Continue Shopping
-                    </a>
+                <div class="col-md-6 product-info">
+                    <h5>@item.Name</h5>
+                    <p>@Html.Raw(item.Description)</p>
+                </div>
+                <div class="col-md-3 text-end">
+                    <h6>@item.Price.ToString("c") x @item.Quantity</h6>
+                    <div class="btn-group mt-2">
+                        <a asp-action="Plus" asp-route-carPartId="@item.Id" class="btn btn-outline-light"><i class="bi bi-plus-square"></i></a>
+                        <a asp-action="Minus" asp-route-carPartId="@item.Id" class="btn btn-outline-light"><i class="bi bi-dash-square"></i></a>
+                        <a asp-action="Remove" asp-route-carPartId="@item.Id" class="btn btn-danger"><i class="bi bi-trash-fill"></i></a>
+                    </div>
                 </div>
             </div>
+        }
+
+        <div class="total-box">
+            <h4>Total: @Model.TotalPrice.ToString("c")</h4>
+            <a asp-action="Summary" class="btn btn-primary btn-checkout">Proceed to Checkout</a>
         </div>
+    }
 
-        <div class="card-body my-4">
-            @if (Model.Products == null || !Model.Products.Any())
-            {
-                <div class="text-center my-5">
-                    <h4 class="text-muted">Your cart is empty. Please add some products first.</h4>
+    @if (Model.ViewedProducts.Any())
+    {
+        <button class="btn-toggle" onclick="toggleSuggestions()">🙈 Hide Suggestions</button>
+
+        <div class="suggested-products active" id="suggestedProducts">
+            <div class="card shadow mt-4 border-0">
+                <div class="card-header" style="background-color: #2a2a2a; color: #ccc;">
+                    <h4 class="m-0">May be you would like</h4>
                 </div>
-            }
-            else
-            {
-                <div class="row mb-3 pb-3">
-                    <div class="col-md-10 offset-md-1">
-                        @foreach (var item in Model.Products)
+                <div class="card-body">
+                    <div class="row">
+                        @foreach (var item in Model.ViewedProducts)
                         {
-                            <div class="row align-items-center border-bottom pb-3 mb-3">
-                                <div class="col-md-3 text-center">
-                                    <img src="@item.ImageUrl" class="rounded w-100"
-                                         style="max-height: 200px; object-fit: contain;"
+                            <div class="col-md-3 mb-4 position-relative">
+                                <div class="card h-100 shadow-sm suggested-card">
+                                    <a asp-action="RemoveView" asp-route-carPartId="@item.Id" class="btn btn-sm btn-danger position-absolute top-0 end-0 m-2" title="Remove from suggestions">
+                                        <i class="bi bi-x-lg"></i>
+                                    </a>
+
+                                    <img src="@item.ImageUrl" class="card-img-top" alt="@item.Name"
+                                         style="max-height: 180px; object-fit: contain;"
                                          onerror="this.src='/images/default-placeholder.png'" />
-                                </div>
 
-                                <div class="col-md-6">
-                                    <h5 class="text-uppercase text-secondary"><strong>@item.Name</strong></h5>
-                                    <p class="text-muted"><small>@Html.Raw(item.Description)</small></p>
-                                </div>
-
-                                <div class="col-md-3 text-center">
-                                    <h6 class="fw-semibold mb-2">
-                                        @item.Price.ToString("c")
-                                        <span class="text-muted">&nbsp;x&nbsp;</span>@item.Quantity
-                                    </h6>
-                                    <div class="btn-group" role="group">
-                                        <a asp-action="Plus" asp-route-carPartId="@item.Id"
-                                           class="btn btn-outline-primary bg-gradient py-2">
-                                            <i class="bi bi-plus-square"></i>
-                                        </a>
-
-                                        <a asp-action="Minus" asp-route-carPartId="@item.Id"
-                                           class="btn btn-outline-primary bg-gradient py-2">
-                                            <i class="bi bi-dash-square"></i>
-                                        </a>
-
-                                        <a asp-action="Remove" asp-route-carPartId="@item.Id"
-                                           class="btn btn-danger bg-gradient py-2">
-                                            <i class="bi bi-trash-fill"></i>
+                                    <div class="card-body">
+                                        <h5 class="card-title">@item.Name</h5>
+                                        <p class="card-text">@Html.Raw(item.Description)</p>
+                                        <p class="card-text fw-bold">@item.Price.ToString("c")</p>
+                                    </div>
+                                    <div class="card-footer text-center">
+                                        <a asp-controller="Home" asp-action="Details" asp-route-id="@item.Id" class="btn btn-outline-primary btn-sm">
+                                            View Details
                                         </a>
                                     </div>
                                 </div>
                             </div>
                         }
-                    </div>
-                </div>
 
-                <div class="card-footer bg-white border-0">
-                    <div class="row">
-                        <div class="col-md-4 offset-md-4">
-                            <ul class="list-group mb-4">
-                                <li class="d-flex justify-content-between align-items-center">
-                                    <h5 class="text-dark fw-semibold text-uppercase">Total (USD)</h5>
-                                    <h4 class="text-dark fw-bolder">@Model.TotalPrice.ToString("c")</h4>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-2 offset-md-5">
-                            <a asp-action="Summary" class="btn btn-primary border-0 bg-gradient w-100 py-2">Summary</a>
-                        </div>
                     </div>
                 </div>
-            }
+            </div>
         </div>
-    </div>
-</form>
+    }
+</div>
+
+<script>
+    function toggleSuggestions() {
+        const box = document.getElementById('suggestedProducts');
+        const btn = document.querySelector('.btn-toggle');
+
+        if (box.classList.contains('active')) {
+            box.classList.remove('active');
+            btn.innerText = '👀 Show Suggestions';
+        } else {
+            box.classList.add('active');
+            btn.innerText = '🙈 Hide Suggestions';
+        }
+    }
+</script>

@@ -29,23 +29,53 @@ namespace VroomParts.Areas.Admin.Controllers
         }
         public IActionResult Index()
         {
-            var model = new RecomendationViewModel
+            var model = new RecomendationsViewModel
             {
                 Cars = _vehicleService.GetVehicles()
-                 .Select(v => new SelectListItem { Value = v.Id.ToString(), Text = v.Model }) 
+                 .Select(v => new VehicleViewModel
+                 {
+                     Id = v.Id,
+                     Model = v.Model,
+                     Make = v.Make,
+                     Year = v.Year
+                 }) 
                  .ToList(),
 
                 Parts = _carPartService.GetParts()
-                 .Select(p => new SelectListItem { Value = p.Id.ToString(), Text = p.Name })
+                 .Select(p => new CarPartViewModel 
+                 { 
+                     Id = p.Id,
+                     Name = p.Name
+                 })
                  .ToList(),
 
-                Recomendations = _recomendationService.GetRecomendations()
+                Recomendations = _recomendationService.GetRecomendations().Select(r => new RecomendationViewModel 
+                {
+                    VehicleId = r.VehicleId,
+                    VehicleMake = r.VehicleMake,
+                    VehicleModel = r.VehicleModel,
+                    VehicleYear = r.VehicleYear,
+                    CarPartId = r.CarPartId,
+                    CarPartName = r.CarPartName,
+                    CarPartDescription = r.CarPartDescription,
+                    CarPartImageUrl = r.CarPartImageUrl,
+                    CarPartPrice = r.CarPartPrice
+                }).ToList(),
+
+                MissingRecommendations = _recomendationService.MissingRecommendations().Select(m => new MissingRecomendationViewModel 
+                {
+                    Id = m.Id,
+                    Make = m.Make,
+                    Model = m.Model,
+                    Year = m.Year,
+                    CreatedAt = m.CreatedAt,
+                }).ToList()
             };
 
             return View(model);
         }
         [HttpPost]
-        public IActionResult Add(RecomendationViewModel model)
+        public IActionResult Add(RecomendationsViewModel model)
         {
             _recomendationService.AddRecomendation(new CreateRecomendationRequest
             {
@@ -66,6 +96,18 @@ namespace VroomParts.Areas.Admin.Controllers
                 PartId = partId
             });
 
+            return RedirectToAction("Index");
+        }
+
+        public IActionResult MissingRecommendations()
+        {
+            var list = _recomendationService.MissingRecommendations();
+            return View(list);
+        }
+
+        public IActionResult RemoveMissingRecommendations(Guid missingRecomendationId)
+        {
+            _recomendationService.RemoveMissingRecomendation(missingRecomendationId);
             return RedirectToAction("Index");
         }
     }

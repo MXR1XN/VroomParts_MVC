@@ -14,10 +14,16 @@ namespace VroomParts.Application.Products
         CarPartDto Delete(Guid id);
 
         List<CarPartDto> Search(GetPartsRequest request);
+
         List<CarPartDto> GetByCompatibility(SearchRecomendationRequest compatibilityKey);
+
         List<CarPartDto> GetParts();
 
-        List<CarPartDto> GetByViewCount();
+        List<CarPartDto> GetByViewCount(int count, string userId);
+
+        void TrackView(string userId, Guid carPartId);
+
+        void RemoveTrackView(string userId, Guid carPartId);
 
     }
 }

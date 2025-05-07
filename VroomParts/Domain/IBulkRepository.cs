@@ -4,5 +4,6 @@
 	{
 		void CreateRange(IEnumerable<T> entities);
 		void DeleteRange(IEnumerable<T> entities);
+		void UpdateRange(IEnumerable<T> entities);
 	}
 }

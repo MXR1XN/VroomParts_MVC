@@ -21,3 +21,18 @@
         </div>
     </div>
 </div>
+
+@section Scripts {
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <script>
+            Swal.fire({
+                icon: 'success',
+                title: 'Order Confirmed',
+                text: '@TempData["SuccessMessage"]',
+                timer: 2500,
+                showConfirmButton: false
+            });
+        </script>
+    }
+}

@@ -49,5 +49,11 @@ namespace VroomParts.Data
             _context.SaveChanges();   
             return entity;
         }
+
+        public void UpdateRange(IEnumerable<T> entities)
+        {
+            _set.UpdateRange(entities);
+            _context.SaveChanges();
+        }
     }
 }

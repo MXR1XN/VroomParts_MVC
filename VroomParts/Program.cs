@@ -26,6 +26,10 @@ using VroomParts.Data.Repository.VehicleRepository;
 using VroomParts.Application.Recomendations;
 using VroomParts.Domain.VehicleRecommendations;
 using VroomParts.Data.Repository.RecomendationRepository;
+using VroomParts.Domain.TrackViews;
+using VroomParts.Data.Repository.TrackViews;
+using VroomParts.Domain.MissingRecommendations;
+using VroomParts.Data.Repository.MissingRecommendations;
 
 internal class Program
 {
@@ -68,6 +72,9 @@ internal class Program
         builder.Services.AddScoped<ILineItemRepository, LineItemRepository>();
         builder.Services.AddScoped<IVehicleRepository, VehicleRepository>();
         builder.Services.AddScoped<IRecomendationRepository, RecomendationRepository>();
+        builder.Services.AddScoped<IViewedCarPatrsRepository, ViewedCarPartRepository>();
+        builder.Services.AddScoped<IMissingRecommendationRepository, MissingRecomendationRepository>();
+        
 
         builder.Services.AddScoped<IApplicationUserRepository, ApplicationUserRepository>();
 

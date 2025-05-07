@@ -4,6 +4,7 @@ using System.Security.Claims;
 using VroomParts.Application.ApplicationUserService;
 using VroomParts.Application.Cart;
 using VroomParts.Application.Orders;
+using VroomParts.Application.Products;
 using VroomParts.Areas.Customer.ViewModels;
 using VroomParts.Domain.Products;
 
@@ -16,15 +17,20 @@ namespace VroomParts.Areas.Customer.Controllers
         private readonly ICartService _shoppingCartService;
         private readonly IOrderService _orderService;
         private readonly IApplicationUserService _applicationUserService;
+        private readonly ICarPartService _carPartService;
+
+        private const int VIEWEDCOUNT = 2;
 
 		public ShoppingCartController(
             ICartService shoppingCartService, 
             IOrderService orderService,
-			IApplicationUserService aplicationUserService)
+			IApplicationUserService aplicationUserService,
+            ICarPartService carPartService)
         {
             _shoppingCartService = shoppingCartService;
             _orderService = orderService;
             _applicationUserService = aplicationUserService;
+            _carPartService = carPartService;
 
         }
 
@@ -34,6 +40,8 @@ namespace VroomParts.Areas.Customer.Controllers
             var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
             var shoppingCartDto = _shoppingCartService.GetCart(userId);
+
+            var viewProducts = _carPartService.GetByViewCount(VIEWEDCOUNT, userId);
 
             var model = new CartProductsViewModel() 
             {
@@ -46,17 +54,34 @@ namespace VroomParts.Areas.Customer.Controllers
                     ImageUrl = c.ImageUrl,
                     Price = c.Price,
                     Quantity = c.Count,
-                    VehicleCompatibility = c.VehicleCompatibility.Select(v => new VehicleSearchViewModel 
+                    VehicleCompatibility = c.VehicleCompatibilities.Select(v => new VehicleSearchViewModel 
                     {
                         Make = v.Make,
                         Model = v.Model,
                         Year = v.Year
                     }).ToList(),
-
+                    
 
                 }).ToList(),
+                ViewedProducts = viewProducts.Select(v => new ProductViewModel 
+                {
+                    Id = v.Id,
+                    Name = v.Name,
+                    Description = v.Description,
+                    ImageUrl = v.ImageUrl,
+                    Price = v.Price,
+                    Quantity = 1, 
+                    VehicleCompatibility = v.VehicleCompatibilities.Select(vc => new VehicleSearchViewModel
+                    {
+                        Make = vc.Make,
+                        Model = vc.Model,
+                        Year = vc.Year
+                    }).ToList()
+                }).ToList(),
+                
                 TotalPrice = shoppingCartDto.TotalPrice,    
             };
+
 
             return View(model);
         }
@@ -90,6 +115,12 @@ namespace VroomParts.Areas.Customer.Controllers
             return RedirectToAction("Confirmation");
         }
 
+        public IActionResult Confirmation()
+        {
+            TempData["SuccessMessage"] = "Your order was placed successfully!";
+            return View();
+        }
+
         public IActionResult Plus(Guid carPartId)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -110,9 +141,14 @@ namespace VroomParts.Areas.Customer.Controllers
             _shoppingCartService.Remove(userId, carPartId);
             return RedirectToAction(nameof(Index));
         }
-        public IActionResult Confirmation()
+
+        public IActionResult RemoveView(Guid carPartId)
         {
-            return View();
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            
+            _carPartService.RemoveTrackView(userId, carPartId); 
+
+            return RedirectToAction(nameof(Index));
         }
 
     }

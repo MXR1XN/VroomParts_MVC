@@ -8,13 +8,6 @@
 <div class="container mt-4">
     <h2 class="text-center">My Orders</h2>
 
-    @if (TempData["SuccessMessage"] != null)
-    {
-        <div class="alert alert-success text-center">
-            @TempData["SuccessMessage"]
-        </div>
-    }
-
     @if (Model.Any())
     {
         <table class="table table-striped mt-3">
@@ -94,3 +87,32 @@
         </div>
     }
 </div>
+
+<!-- SweetAlert Notifications -->
+@section Scripts {
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <script>
+            Swal.fire({
+                icon: 'success',
+                title: 'Success',
+                text: '@TempData["SuccessMessage"]',
+                timer: 2000,
+                showConfirmButton: false
+            });
+        </script>
+    }
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <script>
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: '@TempData["ErrorMessage"]',
+                timer: 3000,
+                showConfirmButton: true
+            });
+        </script>
+    }
+}

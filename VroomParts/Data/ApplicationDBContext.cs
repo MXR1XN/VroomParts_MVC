@@ -5,6 +5,7 @@ using VroomParts.Domain.Car;
 using VroomParts.Domain.Cart;
 using VroomParts.Domain.Categories;
 using VroomParts.Domain.LineItems;
+using VroomParts.Domain.MissingRecommendations;
 using VroomParts.Domain.Orders;
 using VroomParts.Domain.Products;
 using VroomParts.Domain.TrackViews;
@@ -28,6 +29,8 @@ namespace VroomParts.Data
         public DbSet<VehicleCompatibility> VehicleCompatibility { get; set; }
 
         public DbSet<ViewedCarPart> ViewedCarParts { get; set; }
+
+        public DbSet<MissingRecommendation> MissingRecommendations { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

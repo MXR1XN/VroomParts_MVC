@@ -10,7 +10,7 @@ namespace VroomParts.Application.Cart
 
         public string? Description { get; set; }
 
-        public List<VehicleDto> VehicleCompatibility { get; set; } = [];
+        public List<VehicleDto> VehicleCompatibilities { get; set; } = [];
 
         public string? ImageUrl { get; set; }
 

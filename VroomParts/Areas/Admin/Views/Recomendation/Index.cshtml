@@ -1,5 +1,5 @@
 ﻿@using VroomParts.Areas.Admin.ViewModels
-@model RecomendationViewModel
+@model RecomendationsViewModel
 
 @{
     ViewData["Title"] = "Manage Recommendations";
@@ -14,16 +14,25 @@
 
             <div class="mb-3">
                 <label>Select Car</label>
-                <select asp-for="SelectedCarId" asp-items="Model.Cars" class="form-select" required>
+                <select asp-for="SelectedCarId" class="form-select" required>
                     <option value="">-- Choose Car --</option>
+                    @foreach (var car in Model.Cars)
+                    {
+                        <option value="@car.Id">@car.Make @car.Model (@car.Year)</option>
+                    }
                 </select>
             </div>
 
             <div class="mb-3">
                 <label>Select Part</label>
-                <select asp-for="SelectedPartId" asp-items="Model.Parts" class="form-select" required>
+                <select asp-for="SelectedPartId" class="form-select" required>
                     <option value="">-- Choose Part --</option>
+                    @foreach (var part in Model.Parts)
+                    {
+                        <option value="@part.Id">@part.Name</option>
+                    }
                 </select>
+
             </div>
 
             <div class="text-center mb-3">
@@ -66,4 +75,40 @@
         }
     </tbody>
 </table>
+@if (Model.MissingRecommendations.Any())
+{
+    <hr />
+    <h4 class="text-center text-warning">Missing Recommendations</h4>
+
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>Make</th>
+                <th>Model</th>
+                <th>Year</th>
+                <th>Reported</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var missing in Model.MissingRecommendations)
+            {
+                <tr>
+                    <td>@missing.Make</td>
+                    <td>@missing.Model</td>
+                    <td>@missing.Year</td>
+                    <td>@missing.CreatedAt.ToString("g")</td>
+                    <td>
+                        <form asp-action="RemoveMissingRecommendations" method="post" style="display:inline">
+                            <input type="hidden" name="missingRecomendationId" value="@missing.Id" />
+                            <button class="btn btn-danger btn-sm" type="submit">
+                                <i class="bi bi-x-circle"></i> Delete
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
 

@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using VroomParts.Application.Categories;
 using VroomParts.Areas.Admin.ViewModels;
-using VroomParts.Domain.Categories;
 using VroomParts.Utility;
 
 namespace VroomParts.Areas.Admin.Controllers

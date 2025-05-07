@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using VroomParts.Application.Products;
 using VroomParts.Application.Recomendations;
-using VroomParts.Areas.Admin.ViewModels;
 using VroomParts.Areas.Customer.ViewModels;
 
 namespace VroomParts.Areas.Customer.Controllers
@@ -34,7 +33,8 @@ namespace VroomParts.Areas.Customer.Controllers
             }
 
             var filteredProducts = _carPartService.GetByCompatibility(searchViewModel);
-            var filteredRecommendations = _recomendationService.GetRecomendationsByModel(searchViewModel);
+
+            var filteredRecommendations = _recomendationService.GetPartsByVehicle(searchViewModel);
 
             var model = new VehicleSearchViewModel()
             {

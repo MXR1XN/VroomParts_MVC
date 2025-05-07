@@ -1,6 +1,4 @@
-﻿using VroomParts.Domain.LineItems;
-
-namespace VroomParts.Application.Orders
+﻿namespace VroomParts.Application.Orders
 {
     public class OrderDto
     {

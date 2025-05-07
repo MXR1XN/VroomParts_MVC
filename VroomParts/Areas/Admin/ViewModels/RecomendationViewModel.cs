@@ -1,20 +1,16 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
-using VroomParts.Application.Recomendations;
-
-namespace VroomParts.Areas.Admin.ViewModels
+﻿namespace VroomParts.Areas.Admin.ViewModels
 {
     public class RecomendationViewModel
     {
-        public Guid SelectedCarId { get; set; }
-        public Guid SelectedPartId { get; set; }
+        public Guid VehicleId { get; set; }
+        public string? VehicleMake { get; set; }
+        public string? VehicleModel { get; set; }
+        public int? VehicleYear { get; set; }
 
-        public Guid? EditCarId { get; set; }
-        public Guid? EditPartId { get; set; }
-        public Guid? NewPartId { get; set; }
-
-        public List<SelectListItem> Cars { get; set; }
-        public List<SelectListItem> Parts { get; set; }
-
-        public List<RecomendationDto> Recomendations { get; set; } // to DO
+        public Guid CarPartId { get; set; }
+        public string CarPartName { get; set; } = string.Empty;
+        public decimal CarPartPrice { get; set; }
+        public string CarPartDescription { get; set; } = string.Empty;
+        public string? CarPartImageUrl { get; set; }
     }
 }

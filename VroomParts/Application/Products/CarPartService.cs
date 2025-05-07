@@ -1,11 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System.Linq;
 using VroomParts.Application.Recomendations;
 using VroomParts.Application.Vehicles;
 using VroomParts.Areas.Admin.ViewModels;
-using VroomParts.Areas.Customer.ViewModels;
 using VroomParts.Domain.Car;
+using VroomParts.Domain.Cart;
 using VroomParts.Domain.Products;
+using VroomParts.Domain.TrackViews;
 
 namespace VroomParts.Application.Products
 {
@@ -14,11 +14,20 @@ namespace VroomParts.Application.Products
 
         private readonly ICarPartRepository _carPartRepository;
         private readonly IVehicleRepository _vehicleRepository;
+        private readonly IViewedCarPatrsRepository _viewedCarPatrsRepository;
+        private readonly ICartRepository _cartRepository;
 
-        public CarPartService(ICarPartRepository carPartRepository, IVehicleRepository vehicleRepository)
+        public CarPartService(
+            ICarPartRepository carPartRepository, 
+            IVehicleRepository vehicleRepository,
+            IViewedCarPatrsRepository viewedCarPatrsRepository,
+            ICartRepository cartRepository
+            )
         {
             _carPartRepository = carPartRepository;
             _vehicleRepository = vehicleRepository;
+            _viewedCarPatrsRepository = viewedCarPatrsRepository;
+            _cartRepository = cartRepository;
         }
 
         public CarPartDto Create(CreateCarPartModel model)
@@ -104,6 +113,13 @@ namespace VroomParts.Application.Products
                 .Select(p => p.ToDto())
                 .ToList();
         }
+        public List<CarPartDto> GetByViewCount(int count, string userId)
+        {
+            return _viewedCarPatrsRepository.Query()
+                .Where(v => v.UserId == userId && v.ViewCount > count)
+                .Select(v => v.CarPart!.ToDto())
+                .ToList();
+        }
 
         public List<CarPartDto> GetByCompatibility(SearchRecomendationRequest compatibilityKey)
         {
@@ -114,6 +130,7 @@ namespace VroomParts.Application.Products
                 (!compatibilityKey.Year.HasValue || v.Year == compatibilityKey.Year))
                 .Include(v => v.Compatibility)
                 .SelectMany(v => v.Compatibility)
+                .Where(v => v.Category!.Name != "Bonus Product")
                 .Select(p => p.ToDto())
                 .Distinct()
                 .ToList();
@@ -121,15 +138,26 @@ namespace VroomParts.Application.Products
 
         public List<CarPartDto> Search(GetPartsRequest request)
         {
-           
-            var parts = string.IsNullOrEmpty(request.PartPartCompatibility)
-                ? _carPartRepository.Query()
-                : _vehicleRepository.Query()
+
+            IQueryable<CarPart> parts;
+
+            if (string.IsNullOrEmpty(request.PartPartCompatibility))
+            {
+                parts = _carPartRepository.Query()
+                    .Where(c => c.Category == null || c.Category.Name != "Bonus Product");
+            }
+
+            else 
+            {
+                parts =  _vehicleRepository.Query()
                     .Where(v => v.Make.Contains(request.PartPartCompatibility) ||
                         v.Model.Contains(request.PartPartCompatibility) ||
                         v.Year.ToString().Contains(request.PartPartCompatibility))
                     .Include(v => v.Compatibility)
-                    .SelectMany(v => v.Compatibility).Distinct();
+                    .SelectMany(v => v.Compatibility)
+                    .Where(v => v.Category!.Name != "Bonus Product")
+                    .Distinct();
+            }
 
 
             if (request.CategoryIds != null && request.CategoryIds.Any())
@@ -164,9 +192,73 @@ namespace VroomParts.Application.Products
                 {
                     Make = vc.Make,
                     Model = vc.Model,
-                    Year = vc.Year
+                    Year = vc.Year,
                 }).ToList(),
             }).ToList();
         }
+
+
+        public void TrackView(string userId, Guid carPartId)
+        {
+           var shoppingCart = _cartRepository.Query().Where(s => s.ApplicationUserId == userId)
+                .Include(s => s.CarPart)
+                .Select(s => s.CarPartId)
+                .ToList();
+
+            var viewEntry = _viewedCarPatrsRepository.Query()
+                .FirstOrDefault(v => v.UserId == userId && v.CarPartId == carPartId);
+
+
+            bool isInACart = shoppingCart.Contains(carPartId);
+
+            if (isInACart) 
+            {
+                if (viewEntry != null) 
+                {
+                    _viewedCarPatrsRepository.Delete(viewEntry);
+                }
+                return;
+            }
+
+            if (viewEntry != null) 
+            {
+                viewEntry.ViewCount++;
+                _viewedCarPatrsRepository.Update(viewEntry);
+            }
+            else
+            {
+                var newEntry = new ViewedCarPart
+                {
+                    UserId = userId,
+                    CarPartId = carPartId,
+                    ViewCount = 1
+                };
+                _viewedCarPatrsRepository.Create(newEntry);
+            }
+        }
+
+        public void RemoveTrackView(string userId, Guid carPartId)
+        {
+            var viewEntry = _viewedCarPatrsRepository.Query()
+               .FirstOrDefault(v => v.UserId == userId && v.CarPartId == carPartId);
+
+            if (viewEntry != null)
+            {
+                _viewedCarPatrsRepository.Delete(viewEntry);
+            }
+            return;
+
+        }
     }
 }
+
+/*var parts = string.IsNullOrEmpty(request.PartPartCompatibility)
+               ? _carPartRepository.Query()
+               : _vehicleRepository.Query()
+                   .Where(v => v.Make.Contains(request.PartPartCompatibility) ||
+                       v.Model.Contains(request.PartPartCompatibility) ||
+                       v.Year.ToString().Contains(request.PartPartCompatibility))
+                   .Include(v => v.Compatibility)
+                   .SelectMany(v => v.Compatibility)
+                   .Where(v => v.Category!.Name != "Bonus Product")
+                   .Distinct();*/

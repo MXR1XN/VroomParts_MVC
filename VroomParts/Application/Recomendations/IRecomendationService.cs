@@ -4,7 +4,9 @@
     {
         void AddRecomendation(CreateRecomendationRequest create);
         void RemoveRecomendation(DeleteRecomendationRequest delete);
-        List<RecomendationDto> GetRecomendationsByModel(SearchRecomendationRequest model);
+        void RemoveMissingRecomendation(Guid missingRecomendationId);
+        List<RecomendationDto> GetPartsByVehicle(SearchRecomendationRequest model);
         List<RecomendationDto> GetRecomendations();
+        List<MissingRecommendationDto> MissingRecommendations();
     }
 }

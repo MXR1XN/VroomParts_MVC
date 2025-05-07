@@ -54,7 +54,7 @@ namespace VroomParts.Areas.Customer.Controllers
             try
             {
                 _orderService.Delete(id);
-                TempData["SuccessMessage"] = "Car Part deleted successfully.";
+                TempData["SuccessMessage"] = "Order was deleted successfully.";
                 return RedirectToAction(nameof(Index));
             }
             catch (ArgumentException)

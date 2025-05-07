@@ -1,15 +1,13 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using VroomParts.Application.Cart;
 using VroomParts.Areas.Customer.ViewModels;
 using VroomParts.Domain.Cart;
 using VroomParts.Domain.LineItems;
 using VroomParts.Domain.Orders;
-using VroomParts.Domain.Products;
 using VroomParts.Domain.Users;
 
 namespace VroomParts.Application.Orders
 {
-	public class OrderService : IOrderService
+    public class OrderService : IOrderService
     {
         private readonly IOrderRepository _orderRepository;
         private readonly IApplicationUserRepository _userRepository;
@@ -65,8 +63,8 @@ namespace VroomParts.Application.Orders
 		            Description = c.CarPart.Description,
 		            Price = c.CarPart.Price,
 		            ImageUrl = c.CarPart.ImageUrl,
-		            Category = c.CarPart.Category!.Name,
-		            Quantity = c.Count,
+                    Category = c.CarPart.Category != null ? c.CarPart.Category.Name : "Unknown",
+                    Quantity = c.Count,
                     OrderId = order.Id
 				}).ToList();
 

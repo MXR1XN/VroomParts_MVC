@@ -20,7 +20,7 @@ namespace VroomParts.Application.Products
                 {
                     Make = v.Make,
                     Model = v.Model,
-                    Year = v.Year
+                    Year = v.Year,
                 }).ToList()
             }; 
         }
