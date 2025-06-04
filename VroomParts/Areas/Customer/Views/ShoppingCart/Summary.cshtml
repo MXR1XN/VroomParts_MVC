@@ -1,4 +1,5 @@
-﻿@using VroomParts.Areas.Customer.ViewModels
+﻿@using System.Globalization
+@using VroomParts.Areas.Customer.ViewModels
 @model OrderModel
 
 <form method="post">
@@ -79,7 +80,7 @@
 							<ul class="list-group mb-3">
 								<li class="list-group-item d-flex justify-content-between bg-light">
 									<small class="text-info">Total (USD)</small>
-									<h4 class="text-dark fw-bolder">@Model.TotalPrice.ToString("c")</h4>
+									<h4 class="text-dark fw-bolder">@Model.TotalPrice.ToString("c", new CultureInfo("en-US"))</h4>
 								</li>
 							</ul>
 						</div>

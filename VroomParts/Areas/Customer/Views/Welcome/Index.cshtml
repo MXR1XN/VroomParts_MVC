@@ -96,23 +96,45 @@
         <h1>Find Parts for Your Ride</h1>
         <p>Search for compatible car parts tailored to your specific vehicle. Enter your make, model, and year — and we'll do the rest.</p>
 
-        <form asp-action="Index" method="get" class="form-inline">
+        <form asp-action="Index" method="get" class="form-inline" id="searchForm">
+
             <div class="form-group">
                 <label asp-for="Make">Make</label>
-                <input asp-for="Make" class="form-control" placeholder="e.g. BMW" />
+
+                <select asp-for="Make" class="form-select" id="makeSelect" required>
+                    <option value="">-- Make --</option>
+                    @foreach (var m in Model.Makes)
+                    {
+                        <option value="@m.Value">@m.Text</option>
+                    }
+                </select>
             </div>
 
             <div class="form-group">
                 <label asp-for="Model">Model</label>
-                <input asp-for="Model" class="form-control" placeholder="e.g. E60" />
+
+                <select asp-for="Model" class="form-select" id="modelSelect" required>
+                    <option value="">-- Model --</option>
+                    @foreach (var m in Model.Models)
+                    {
+                        <option value="@m.Value">@m.Text</option>
+                    }
+                </select>
             </div>
 
             <div class="form-group">
-                <label asp-for="Year">Year</label>
-                <input asp-for="Year" type="number" class="form-control" placeholder="e.g. 2007" />
+                <label asp-for="Model">Year</label>
+
+                <select asp-for="Year" class="form-select" id="yearSelect">
+                    <option value="">-- Year --</option>
+                    @foreach (var m in Model.Years)
+                    {
+                        <option value="@m.Value">@m.Text</option>
+                    }
+                </select>
             </div>
 
-            <button type="submit" class="btn btn-primary">Search</button>
+            <button type="button" id="clearFiltersBtn" class="btn btn-primary">Clear</button>
         </form>
     </div>
 </div>
@@ -146,6 +168,7 @@
 
 @if (Model.Make != null || Model.Model != null)
 {
+    <h3 class="text-info text-center mt-4">Parts that can boost performance</h3>
     <div class="text-center my-4">
         <button id="showRecsBtn" onclick="toggleRecommendations()" class="btn btn-primary">
             Show Bonus Products
@@ -189,4 +212,35 @@
 
         document.getElementById('showRecsBtn').style.display = 'none';
     }
+
+    window.addEventListener("DOMContentLoaded", function () {
+        const form = document.getElementById("searchForm");
+
+        const makeSelect = document.getElementById("makeSelect");
+        const modelSelect = document.getElementById("modelSelect");
+        const yearSelect = document.getElementById("yearSelect");
+
+        if (makeSelect) {
+            makeSelect.addEventListener("change", () => form.submit());
+        }
+
+        if (modelSelect) {
+            modelSelect.addEventListener("change", () => form.submit());
+        }
+
+        if (yearSelect) {
+            yearSelect.addEventListener("change", () => form.submit());
+        }
+
+        const clearBtn = document.getElementById("clearFiltersBtn");
+        if (clearBtn) {
+            clearBtn.addEventListener("click", function (e) {
+                e.preventDefault();
+                makeSelect.selectedIndex = 0;
+                modelSelect.selectedIndex = 0;
+                yearSelect.selectedIndex = 0;
+                form.submit();
+            });
+        }
+    });
 </script>

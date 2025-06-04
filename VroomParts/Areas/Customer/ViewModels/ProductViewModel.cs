@@ -1,4 +1,6 @@
-﻿namespace VroomParts.Areas.Customer.ViewModels
+﻿using VroomParts.Areas.Admin.ViewModels;
+
+namespace VroomParts.Areas.Customer.ViewModels
 {
     public class ProductViewModel
     {

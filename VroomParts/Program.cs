@@ -102,28 +102,6 @@ internal class Program
 
         app.MapRazorPages();
 
-        /* app.MapControllerRoute(
-             name: "areas",
-             pattern: "{area:exists}/{controller=Customer}/{action=Index}/{id?}"
-         );
-
-         // Default Route
-         app.MapControllerRoute(
-             name: "default",
-             pattern: "{controller=Home}/{action=Index}/{id?}"
-         );
-
-         app.MapControllerRoute(
-             name: "areas",
-             pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}"
-         );
-
-         app.MapControllerRoute(
-             name: "default",
-             pattern: "{controller=Home}/{action=Index}/{id?}",
-             defaults: new { area = "Customer" } 
-         );*/
-
         // Areas (Admin, Customer)
         app.MapControllerRoute(
             name: "areas",

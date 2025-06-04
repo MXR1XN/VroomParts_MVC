@@ -1,4 +1,5 @@
-﻿using VroomParts.Areas.Admin.ViewModels;
+﻿using VroomParts.Application.ApplicationUserService;
+using VroomParts.Areas.Admin.ViewModels;
 using VroomParts.Domain.Categories;
 
 namespace VroomParts.Application.Categories
@@ -7,15 +8,23 @@ namespace VroomParts.Application.Categories
     {
 
         private readonly ICategoryRepository _categoryRepository;
+        private readonly IApplicationUserService _applicationUserService;
 
-        public CategoryService(ICategoryRepository categoryRepository)
+        public CategoryService(ICategoryRepository categoryRepository, IApplicationUserService applicationUserService)
         {
             _categoryRepository = categoryRepository;
+            _applicationUserService = applicationUserService;
         }
 
         public List<CategoryDTO> GetAll()
         {
-            return _categoryRepository.Query().Select(c => c.ToDto()).ToList();
+            IQueryable<Category> categories = _categoryRepository.Query();
+
+            if (!_applicationUserService.IsAdministrator())
+            {
+                categories = categories.Where(c => c.Name != "Bonus product");
+            }
+            return categories.Select(c => c.ToDto()).ToList();
         }
 
         public CategoryDTO GetById(Guid id)

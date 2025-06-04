@@ -19,7 +19,7 @@ namespace VroomParts.Areas.Customer.Controllers
 
         public HomeController
             (
-            ICarPartService carPartService, 
+            ICarPartService carPartService,
             ICategoryService categoryService,
             ICartService shoppingCartService
             )
@@ -33,30 +33,32 @@ namespace VroomParts.Areas.Customer.Controllers
         {
             var carParts = _carPartService.Search(request);
 
+
             if (carParts == null)
             {
                 return NotFound();
             }
 
-            var modelCarParts = carParts.Select(c => new ProductViewModel()
+            var productViewModel = carParts.Select(c => new ProductViewModel()
             {
                 Id = c.Id,
                 Name = c.Name,
                 Description = c.Description,
-                VehicleCompatibility = c.VehicleCompatibilities.Select(v => new VehicleSearchViewModel 
+                VehicleCompatibility = c.VehicleCompatibilities.Select(v => new VehicleSearchViewModel
                 {
                     Make = v.Make,
                     Model = v.Model,
                     Year = v.Year
                 }).ToList(),
                 ImageUrl = c.ImageUrl,
-                Price = c.Price
+                Price = c.Price,
+
             }).ToList();
 
             ViewBag.Categories = _categoryService.GetAll();
             ViewBag.SelectedCategories = request.CategoryIds;
 
-            return View(modelCarParts);
+            return View(productViewModel);
         }
 
         public IActionResult Details(Guid Id)

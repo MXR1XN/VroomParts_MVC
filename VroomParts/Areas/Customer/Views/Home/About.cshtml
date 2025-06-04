@@ -8,120 +8,107 @@
         background-color: #111;
         color: #ccc;
         font-family: 'Segoe UI', sans-serif;
+        margin: 0;
+        padding: 0;
     }
 
-    
     .about-container {
         font-size: 1.1rem;
-    }
-
-    .about-container {
         display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
+        flex-direction: column;
         align-items: center;
-        padding: 80px 40px; 
-        gap: 50px;
-        max-width: 1400px;
+        max-width: 1200px;
         margin: 0 auto;
+        padding: 60px 20px;
+        text-align: justify;
     }
-
-    .about-text {
-        flex: 1 1 450px;
-        min-width: 350px;
-        max-width: 650px;
-    }
-
-        .about-text h3 {
-            margin-top: 30px;
-            font-size: 2rem;
-        }
-
-        .about-text p,
-        .about-text ul {
-            font-size: 1.2rem;
-            color: #ddd;
-            line-height: 1.7;
-        }
-
-        .about-text ul {
-            padding-left: 25px;
-        }
 
     .about-image {
-        flex: 1 1 700px;
-        max-width: 900px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
+        width: 80%;
+        max-width: 800px;
+        margin-bottom: 40px;
+        position: relative;
     }
 
         .about-image img {
             width: 100%;
             border-radius: 20px;
-            box-shadow: 0 0 30px rgba(255, 0, 0, 0.4);
+            box-shadow: 0 0 30px rgba(255, 30, 250, 0.4);
         }
+
+    .about-text {
+        width: 100%;
+    }
+
+    .section {
+        margin-bottom: 40px;
+    }
+
+    .about-text h3 {
+        font-size: 2rem;
+        margin-bottom: 15px;
+    }
+
+    .about-text p,
+    .about-text ul {
+        font-size: 1.2rem;
+        color: #ddd;
+        line-height: 1.7;
+        margin: 10px 0;
+        text-align: justify;
+    }
+
+    .about-text ul {
+        padding-left: 20px;
+    }
 
     .about-title {
         text-align: center;
         font-size: 3rem;
-        margin-top: 60px;
+        margin-top: 40px;
         color: #fff;
     }
-
-    @@media (max-width: 768px) {
-        .about-container {
-            flex-direction: column;
-            padding: 30px;
-        }
-
-        .about-title {
-            font-size: 2.2rem;
-        }
-
-        .about-text h3 {
-            font-size: 1.6rem;
-        }
-
-        .about-text p,
-        .about-text ul {
-            font-size: 1.05rem;
-        }
-    }
-
 </style>
 
 <div class="about-container">
     <div class="about-image">
-        <img src="/images/e60m5.jpg" alt="BMW E60 M5 Headlights">
+        <img src="/images/m5.jpg" alt="BMW E60 M5 Headlights">
     </div>
 
     <div class="about-text">
-        <h3>🔧 Who are we?</h3>
-        <p>
-            VroomParts is a team of car enthusiasts who started with a passion project of modifying our own rides.
-            Now, we provide a wide range of parts, accessories, and tuning solutions tailored to various makes and models.
-        </p>
+        <div class="section">
+            <h3>🔧 Who are we?</h3>
+            <p>
+                VroomParts is a dedicated team of car enthusiasts, born out of a passion for customizing and enhancing our own vehicles.
+                What began as a small hobby project has evolved into a thriving business that serves car lovers everywhere.
+            </p>
+        </div>
 
-        <h3>📈 How did it all start?</h3>
-        <p>
-            It all started in a garage with a single BMW E46 and the dream of enhancing it.
-            With more car friends and more requests, VroomParts was born — turning a hobby into a thriving business.
-        </p>
+        <div class="section">
+            <h3>📈 Our Journey</h3>
+            <p>
+                It all started with a single BMW E46 in a modest garage. As word spread among friends, our passion project grew.
+                Today, VroomParts is recognized for offering top-quality parts and customization solutions.
+            </p>
+        </div>
 
-        <h3>🛠 What do we offer?</h3>
-        <ul>
-            <li>LED lights and lighting upgrades</li>
-            <li>Audio systems and multimedia</li>
-            <li>Touchscreens and GPS navigations</li>
-            <li>Tuning: downpipes, chip tuning, spoilers</li>
-            <li>Custom recommendations for every vehicle</li>
-        </ul>
+        <div class="section">
+            <h3>🛠 Our Offerings</h3>
+            <ul>
+                <li>High-performance lighting and LED upgrades</li>
+                <li>Premium audio and multimedia solutions</li>
+                <li>Advanced touchscreens and GPS systems</li>
+                <li>Performance tuning, including exhausts, chip tuning, and body kits</li>
+                <li>Personalized recommendations for every car make and model</li>
+            </ul>
+        </div>
 
-        <h3>🚗 Your car, your statement!</h3>
-        <p>
-            We believe every car has a unique character — and we help bring it to life.
-            Join the VroomParts community and let your car do the talking 😉
-        </p>
+        <div class="section">
+            <h3>🚗 Your Ride, Your Identity</h3>
+            <p>
+                At VroomParts, we believe that a car should reflect the driver’s unique style. We are passionate about helping you make your ride truly yours.
+                Explore our catalog and join the growing community of automotive enthusiasts who trust us to enhance their driving experience.
+            </p>
+        </div>
     </div>
 </div>

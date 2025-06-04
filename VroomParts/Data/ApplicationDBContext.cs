@@ -27,9 +27,7 @@ namespace VroomParts.Data
         public DbSet<Vehicle> Vehicles { get; set; }
         public DbSet<VehicleRecommendation> VehicleRecommendations { get; set; }
         public DbSet<VehicleCompatibility> VehicleCompatibility { get; set; }
-
         public DbSet<ViewedCarPart> ViewedCarParts { get; set; }
-
         public DbSet<MissingRecommendation> MissingRecommendations { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -41,7 +39,6 @@ namespace VroomParts.Data
                 b.HasOne(c => c.Category)
                 .WithMany()
                 .HasForeignKey(c => c.CategoryId);
-
                 b.Property(c => c.Name)
                 .IsRequired();
             });
@@ -51,7 +48,6 @@ namespace VroomParts.Data
                 b.HasOne(c => c.CarPart)
                 .WithMany()
                 .HasForeignKey(c => c.CarPartId);
-
                 b.HasKey(c => new { c.CarPartId, c.ApplicationUserId });
 
             });

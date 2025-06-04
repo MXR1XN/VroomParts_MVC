@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using VroomParts.Application.Orders;
 using VroomParts.Areas.Customer.ViewModels;
@@ -6,6 +7,7 @@ using VroomParts.Areas.Customer.ViewModels;
 namespace VroomParts.Areas.Customer.Controllers
 {
     [Area("Customer")]
+    [Authorize]
     public class OrderController : Controller
     {
         private readonly IOrderService _orderService;

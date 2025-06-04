@@ -1,4 +1,6 @@
-﻿namespace VroomParts.Areas.Admin.ViewModels
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+
+namespace VroomParts.Areas.Admin.ViewModels
 {
     public class VehicleViewModel
     {

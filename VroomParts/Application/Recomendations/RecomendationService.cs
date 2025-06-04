@@ -24,8 +24,15 @@ namespace VroomParts.Application.Recomendations
 
         public void AddRecomendation(CreateRecomendationRequest create)
         {
-            var car = _vehicleRepository.Find(create.CarId)
+            var car = _vehicleRepository.Query()
+                .Include(c => c.Recommendations)
+                .FirstOrDefault(c => c.Id == create.CarId)
                 ?? throw new ArgumentException("Car not found");
+
+            if (car.Recommendations.Exists(c => c.Id == create.PartId)) 
+            {
+                return;
+            }
 
             var part = _carPartRepository.Find(create.PartId)
                 ?? throw new ArgumentException("Part not found");
@@ -150,7 +157,7 @@ namespace VroomParts.Application.Recomendations
                     })
                 ).ToList();
 
-            if (recommendations.Count == 0) 
+            if (recommendations.Count == 0 && !string.IsNullOrEmpty(vehicleSearch.Model)) 
             {
                 var loggedModel = _missingRecommendationRepository.Query()
                 .Any(x =>

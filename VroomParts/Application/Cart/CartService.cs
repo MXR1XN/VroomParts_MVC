@@ -28,6 +28,8 @@ namespace VroomParts.Application.Cart
                 return new CartDto() 
                 {
                     Header = "Hello, Guest",
+                    Products = new List<CartProductDTO>(),
+                    TotalPrice = 0
                 };
             }
             var cart = user.CartProducts.Select(c => c.ToDto()).ToList();   
@@ -40,6 +42,10 @@ namespace VroomParts.Application.Cart
             };
         }
 
+        public int GetCartCount(string userId) 
+        {
+            return GetCart(userId).Products.Count();
+        }
         public void Minus(string userId, Guid carPartId)
         {
             var entity = _cartRepository.Query()

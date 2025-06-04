@@ -6,7 +6,6 @@ using VroomParts.Application.Cart;
 using VroomParts.Application.Orders;
 using VroomParts.Application.Products;
 using VroomParts.Areas.Customer.ViewModels;
-using VroomParts.Domain.Products;
 
 namespace VroomParts.Areas.Customer.Controllers
 {
@@ -93,7 +92,12 @@ namespace VroomParts.Areas.Customer.Controllers
 
             var user = _applicationUserService.GetUser(userId);
 
-			var model = new OrderModel
+            var cartCount = _shoppingCartService.GetCartCount(userId);
+
+            ViewBag.CartCount = cartCount;
+            ViewData["CartCount"] = ViewBag.CartCount;
+
+            var model = new OrderModel
 			{
 				ApplicaionUserId = userId,
 				TotalPrice = cart.TotalPrice,

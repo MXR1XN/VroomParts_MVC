@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using VroomParts.Application.ApplicationUserService;
 using VroomParts.Application.Recomendations;
 using VroomParts.Application.Vehicles;
 using VroomParts.Areas.Admin.ViewModels;
@@ -16,18 +17,21 @@ namespace VroomParts.Application.Products
         private readonly IVehicleRepository _vehicleRepository;
         private readonly IViewedCarPatrsRepository _viewedCarPatrsRepository;
         private readonly ICartRepository _cartRepository;
+        private readonly IApplicationUserService _applicationUserService;
 
         public CarPartService(
             ICarPartRepository carPartRepository, 
             IVehicleRepository vehicleRepository,
             IViewedCarPatrsRepository viewedCarPatrsRepository,
-            ICartRepository cartRepository
+            ICartRepository cartRepository,
+            IApplicationUserService applicationUserService
             )
         {
             _carPartRepository = carPartRepository;
             _vehicleRepository = vehicleRepository;
             _viewedCarPatrsRepository = viewedCarPatrsRepository;
             _cartRepository = cartRepository;
+            _applicationUserService = applicationUserService;
         }
 
         public CarPartDto Create(CreateCarPartModel model)
@@ -35,6 +39,7 @@ namespace VroomParts.Application.Products
             var vehicles = _vehicleRepository.Query()
                 .Where(v => model.VehicleIds.Contains(v.Id))
                 .ToList();
+
 
             var entity = new CarPart()
             {
@@ -110,6 +115,7 @@ namespace VroomParts.Application.Products
         {
             return _carPartRepository.Query()
                 .Include(v => v.VehicleCompatibility)
+                .Where(v => v.Category != null && v.Category.Name == "Bonus Product")
                 .Select(p => p.ToDto())
                 .ToList();
         }
@@ -126,7 +132,7 @@ namespace VroomParts.Application.Products
             return _vehicleRepository.Query()
                 .Where(v =>
                 (compatibilityKey.Make == null || v.Make == compatibilityKey.Make) &&
-                (compatibilityKey.Model == null || v.Model == compatibilityKey.Model) &&
+                (compatibilityKey.Model == null || v.Model == compatibilityKey.Model || v.Model.Contains(compatibilityKey.Model)) &&
                 (!compatibilityKey.Year.HasValue || v.Year == compatibilityKey.Year))
                 .Include(v => v.Compatibility)
                 .SelectMany(v => v.Compatibility)
@@ -143,22 +149,23 @@ namespace VroomParts.Application.Products
 
             if (string.IsNullOrEmpty(request.PartPartCompatibility))
             {
-                parts = _carPartRepository.Query()
-                    .Where(c => c.Category == null || c.Category.Name != "Bonus Product");
+                parts = _carPartRepository.Query();
             }
 
             else 
             {
-                parts =  _vehicleRepository.Query()
+                parts = _vehicleRepository.Query()
                     .Where(v => v.Make.Contains(request.PartPartCompatibility) ||
                         v.Model.Contains(request.PartPartCompatibility) ||
                         v.Year.ToString().Contains(request.PartPartCompatibility))
                     .Include(v => v.Compatibility)
-                    .SelectMany(v => v.Compatibility)
-                    .Where(v => v.Category!.Name != "Bonus Product")
-                    .Distinct();
+                    .SelectMany(v => v.Compatibility).Distinct();
             }
 
+            if (!_applicationUserService.IsAdministrator())
+            {
+                parts = parts.Where(c => c.Category == null || c.Category.Name != "Bonus Product");
+            }
 
             if (request.CategoryIds != null && request.CategoryIds.Any())
             {

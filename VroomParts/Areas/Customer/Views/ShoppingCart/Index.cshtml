@@ -1,4 +1,5 @@
-﻿@using VroomParts.Areas.Customer.ViewModels
+﻿@using System.Globalization
+@using VroomParts.Areas.Customer.ViewModels
 @model CartProductsViewModel
 
 @{
@@ -18,7 +19,7 @@
         padding: 30px;
         background-color: #1c1c1c;
         border-radius: 20px;
-        box-shadow: 0 0 20px rgba(0, 255, 255, 0.1); /* неон */
+        box-shadow: 0 0 20px rgba(0, 255, 255, 0.1);
     }
 
     .cart-header h3 {
@@ -62,7 +63,7 @@
         border-radius: 10px;
         margin-top: 30px;
         text-align: center;
-        box-shadow: 0 0 15px rgba(0, 255, 255, 0.1); /* легкий неон */
+        box-shadow: 0 0 15px rgba(0, 255, 255, 0.1);
     }
 
         .total-box h4 {
@@ -111,7 +112,7 @@
         color: #ccc;
         border: 1px solid #2a2a2a;
         border-radius: 12px;
-        box-shadow: 0 0 15px rgba(0, 255, 255, 0.1); /* неон */
+        box-shadow: 0 0 15px rgba(0, 255, 255, 0.1);
     }
 
     .card-header {
@@ -126,7 +127,7 @@
         border-radius: 12px;
         padding: 15px;
         color: #fff;
-        box-shadow: 0 0 12px rgba(0, 255, 255, 0.2); /* неоновий ефект */
+        box-shadow: 0 0 12px rgba(0, 255, 255, 0.2);
         transition: all 0.3s ease-in-out;
     }
 
@@ -202,7 +203,7 @@
                     <p>@Html.Raw(item.Description)</p>
                 </div>
                 <div class="col-md-3 text-end">
-                    <h6>@item.Price.ToString("c") x @item.Quantity</h6>
+                    <h6>@item.Price.ToString("c", new CultureInfo("en-US")) x @item.Quantity</h6>
                     <div class="btn-group mt-2">
                         <a asp-action="Plus" asp-route-carPartId="@item.Id" class="btn btn-outline-light"><i class="bi bi-plus-square"></i></a>
                         <a asp-action="Minus" asp-route-carPartId="@item.Id" class="btn btn-outline-light"><i class="bi bi-dash-square"></i></a>
@@ -213,7 +214,7 @@
         }
 
         <div class="total-box">
-            <h4>Total: @Model.TotalPrice.ToString("c")</h4>
+            <h4>Total: @Model.TotalPrice.ToString("c", new CultureInfo("en-US"))</h4>
             <a asp-action="Summary" class="btn btn-primary btn-checkout">Proceed to Checkout</a>
         </div>
     }
@@ -244,7 +245,7 @@
                                     <div class="card-body">
                                         <h5 class="card-title">@item.Name</h5>
                                         <p class="card-text">@Html.Raw(item.Description)</p>
-                                        <p class="card-text fw-bold">@item.Price.ToString("c")</p>
+                                        <p class="card-text fw-bold">@item.Price.ToString("c", new CultureInfo("en-US"))</p>
                                     </div>
                                     <div class="card-footer text-center">
                                         <a asp-controller="Home" asp-action="Details" asp-route-id="@item.Id" class="btn btn-outline-primary btn-sm">

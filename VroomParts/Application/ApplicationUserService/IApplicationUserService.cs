@@ -5,5 +5,6 @@ namespace VroomParts.Application.ApplicationUserService
 	public interface IApplicationUserService
 	{
 		ApplicationUser GetUser(string Id);
-	}
+		bool IsAdministrator();
+    }
 }

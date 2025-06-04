@@ -8,6 +8,7 @@ namespace VroomParts.Application.Cart
         void Minus(string userId, Guid carPartId);
         void Remove(string userId, Guid carPartId);
         void Add(string userId, Guid carPartId, int quantity);
+        int GetCartCount(string userId);
         CartDto GetCart(string userId);
     }
 }
